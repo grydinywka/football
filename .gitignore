@@ -5,3 +5,4 @@
 *.egg
 *.sqlite
 media
+development_settings.py
