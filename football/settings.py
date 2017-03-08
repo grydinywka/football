@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'registration',
     'users_app',
-
+    'football_app',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -49,6 +50,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
 ]
 
 ROOT_URLCONF = 'football.urls'
@@ -56,7 +58,10 @@ ROOT_URLCONF = 'football.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'football_app', 'templates/football_app'),
+            os.path.join(BASE_DIR, 'users_app', 'templates/users_app'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -133,7 +138,7 @@ STATICFILES_DIRS = ( os.path.join(BASE_DIR, 'static'), )
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
- # Honor the 'X-Forwarded-Proto' header for request.is_secure()
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 PORTAL_URL = 'http://localhost:8000'
@@ -141,3 +146,6 @@ PORTAL_URL = 'http://localhost:8000'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+REGISTRATION_OPEN = True
+LOGIN_REDIRECT_URL = '/'
+# INCLUDE_REGISTER_URL = True

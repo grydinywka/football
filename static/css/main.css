@@ -1,1 +1,7 @@
-/* main css file 1 */
+/* main css file */
+
+#user-toolbar {
+    margin-top: 20px;
+    padding-right: 20px;
+    /*text-align: center;*/
+}
