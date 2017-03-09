@@ -1,0 +1,33 @@
+{% extends 'football_app/base.html' %}
+
+{% load static from staticfiles %}
+{% load static %}
+
+{% block meta_title %} - Update user data{% endblock meta_title %}
+
+{% block title %} Update user: {% endblock title %}
+
+{% block content %}
+<form action="{% url 'user_update' object.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="table">
+        <tr>
+            <th><label for="avatar">Avatar: </label></th>
+            <td>
+            {% if user.avatarprofile %}
+            {% get_media_prefix as MEDIA_PREFIX %}
+            <span>Current is: <a href="{{ MEDIA_PREFIX }}{{ user.avatarprofile.avatar }}">{{ user.avatarprofile.avatar }}</a> </span>
+            <input type="checkbox" name="clear_avatar" value=""> Clear <br>
+            {% endif %}
+            <input type="file" value="{{ user.avatarprofile.avatar }}" name="avatar" id="avatar">
+            </td>
+        </tr>
+        {{ form.as_table }}
+    </table>
+
+    <input type="submit" value="Зберегти" name="add_button"
+    class="btn btn-primary" />
+    <button type="submit" name="cancel_button" value="Скасувати"
+    class="btn btn-link">Скасувати</button>
+</form>
+{% endblock content %}

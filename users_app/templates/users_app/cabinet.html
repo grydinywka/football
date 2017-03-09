@@ -1,7 +1,64 @@
 {% extends 'football_app/base.html' %}
 
 {% load static from staticfiles %}
+{% load static %}
 
-{% block meta_title %} - Own cabinet{% endblock meta_title %}
+{% block meta_title %} - {{ user.get_full_name|default:user.username }}{% endblock meta_title %}
 
-{% block title %} Profile {% endblock title %}
+{% block title %} User's profile: {% endblock title %}
+
+{% block content %}
+<table class="table table-striped">
+
+    <tr>
+        <th>Avatar:</th>
+        <td>
+            {% if user.avatarprofile.avatar %}
+            {% get_media_prefix as MEDIA_PREFIX %}
+            <img src="{{ MEDIA_PREFIX }}{{ user.avatarprofile.avatar }}" alt="Avatar" height="42"
+                                 width="42" />
+            {% endif %}
+        </td>
+    </tr>
+
+
+    <tr>
+        <th>Email:</th>
+        <td>{{ user.email }}</td>
+    </tr>
+
+
+
+    <tr>
+        <th>Username:</th>
+        <td>{{ user.username }}</td>
+    </tr>
+
+
+
+    <tr>
+        <th>First Name:</th>
+        <td>{{ user.first_name }}</td>
+    </tr>
+
+
+
+    <tr>
+        <th>Last Name:</th>
+        <td>{{ user.last_name }}</td>
+    </tr>
+
+
+
+    <tr>
+        <th>Joined:</th>
+        <td>{% if user.date_joined %}{{ user.date_joined }}{% endif %}</td>
+    </tr>
+
+</table>
+
+<div>
+    <a class="btn btn-primary" href="{% url 'user_update' user.id %}">Change data</a>
+</div>
+{% endblock content %}
+
