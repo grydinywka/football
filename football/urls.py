@@ -39,4 +39,7 @@ urlpatterns = [
     url(r'^users/register/$', RegistrationView.as_view(form_class=RegistrationFormUniqueEmail), name='registration_register'),
     url(r'^register/complete/$', RedirectView.as_view(pattern_name='cabinet'), name='registration_complete'),
     url(r'^users/', include('registration.backends.simple.urls', namespace='users')),
+
+    # socials
+    url('^social/', include('social_django.urls', namespace='social')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

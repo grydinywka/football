@@ -4,7 +4,6 @@
 
 {% block meta_title %} - Authentication{% endblock meta_title %}
 
-{% block user_info %}{% endblock user_info %}
 
 {% block content %}
 <div class="text-center" id="buttons-ch">
@@ -23,7 +22,7 @@
     </div>
 
     <div>
-        <a href="#">
+        <a href="{% url 'social:begin' 'facebook' %}?next={% url 'cabinet' %}">
             <img src="{% static 'img/facebook1.png' %}" >
         </a>
     </div>

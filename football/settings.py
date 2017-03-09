@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'registration',
+    # 'social.apps.django_app.default',
+    'social_django',
     'users_app',
     'football_app',
 ]
@@ -69,6 +71,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -148,3 +152,23 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REGISTRATION_OPEN = True
 LOGIN_REDIRECT_URL = '/'
+
+# python-social-auth config
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.vk.VKOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# Facebook config
+SOCIAL_AUTH_FACEBOOK_KEY = '1548352051859457'
+SOCIAL_AUTH_FACEBOOK_SECRET = '5fc7c63b1ac3059499ea415cc472438e'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id,name,email',
+}
+
+# VK config
+SOCIAL_AUTH_VK_OAUTH2_KEY = ''
+SOCIAL_AUTH_VK_OAUTH2_SECRET = ''
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
