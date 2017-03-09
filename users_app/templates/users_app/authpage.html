@@ -1,0 +1,32 @@
+{% extends 'football_app/base.html' %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Authentication{% endblock meta_title %}
+
+{% block user_info %}{% endblock user_info %}
+
+{% block content %}
+<div class="text-center" id="buttons-ch">
+    <p class="lead">Choose way for auth:</p>
+    <div>
+        <a href="{% url 'users:auth_login' %}">
+            <button type="button" class="btn btn-default btn-lg">
+            Log In
+            </button>
+        </a>
+        <a href="{% url 'users:registration_register' %}">
+            <button type="button" class="btn btn-default btn-lg">
+            Sign Up
+            </button>
+        </a>
+    </div>
+
+    <div>
+        <a href="#">
+            <img src="{% static 'img/facebook1.png' %}" >
+        </a>
+    </div>
+
+</div>
+{% endblock content %}

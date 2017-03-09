@@ -23,17 +23,19 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic.base import RedirectView
 from django.views.generic import TemplateView
 from users_app.views import CabinetView
+from football_app.views import TournamentView
 
 from registration.backends.simple.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', TemplateView.as_view(template_name='football_app/index.html'), name='home'),
-    url(r'^users/cabinet/$', CabinetView.as_view(), name='cabinet'),
+    url(r'^$', TournamentView.as_view(), name='home'),
 
     # User Related urls
-    url(r'^users/logout/$', auth_views.logout, kwargs={'next_page':'home'}, name='auth_logout'),
+    url(r'^users/auth/$', TemplateView.as_view(template_name='users_app/authpage.html'), name='authpage'),
+    url(r'^users/cabinet/$', CabinetView.as_view(), name='cabinet'),
+    url(r'^users/logout/$', auth_views.logout, kwargs={'next_page':'authpage'}, name='auth_logout'),
     url(r'^users/register/$', RegistrationView.as_view(form_class=RegistrationFormUniqueEmail), name='registration_register'),
     url(r'^register/complete/$', RedirectView.as_view(pattern_name='cabinet'), name='registration_complete'),
     url(r'^users/', include('registration.backends.simple.urls', namespace='users')),

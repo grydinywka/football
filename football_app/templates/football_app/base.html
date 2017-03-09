@@ -1,4 +1,5 @@
 {% load static from staticfiles %}
+{% load static %}
 
 <!DOCTYPE html>
 <html>
@@ -25,10 +26,19 @@
                         <h1 class="text-center">Table Football</h1>
                     </div>
 
+					{% block user_info %}
                     <div class="col-xs-3 text-right" id="user-toolbar">
                         {% if user.is_authenticated %}
-                            <p>{{ user.get_full_name|default:user.username }}</p>
-							<p> {{ user.email }}</p>
+
+                            <a href="{% url 'cabinet' %}">
+								{% if user.avatarprofile %}
+								{% get_media_prefix as MEDIA_PREFIX %}
+								<img src="{{ MEDIA_PREFIX }}{{ user.avatarprofile.avatar }}" alt="Avatar" height="42"
+									 width="42" />
+								{% endif %}
+								<p>{{ user.get_full_name|default:user.username }}</p>
+							</a>
+							<!--<p> {{ user.email }}</p>-->
 
 							<p><a href="{% url 'users:auth_logout' %}" class="auth-link">Logout</a></p>
 						{% else %}
@@ -37,6 +47,7 @@
 							<p><a href="{% url 'users:registration_register' %}" class="auth-link">Register</a></p>
 						{% endif %}
                     </div>
+					{% endblock user_info %}
                 </div>
 
             </div>
