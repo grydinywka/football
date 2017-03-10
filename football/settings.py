@@ -159,7 +159,6 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.vk.VKOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
-
 # Facebook config
 SOCIAL_AUTH_FACEBOOK_KEY = '1548352051859457'
 SOCIAL_AUTH_FACEBOOK_SECRET = '5fc7c63b1ac3059499ea415cc472438e'
@@ -167,8 +166,18 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id,name,email',
 }
-
 # VK config
 SOCIAL_AUTH_VK_OAUTH2_KEY = '5914673 '
 SOCIAL_AUTH_VK_OAUTH2_SECRET = 'sb9yFvAR6bGT9ickWpRW'
 SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+    'users_app.pipeline.get_avatar',
+)

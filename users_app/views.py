@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, UpdateView
 from django.views.generic.edit import FormView
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from users_app.models import AvatarProfile
 from users_app.forms import UserForm
@@ -30,19 +31,13 @@ class UserUpdateView(LoginRequiredMixinCustom, UpdateView):
     model = User
     template_name = "users_app/user_update.html"
     pk_url_kwarg = 'uid'
-    success_url = '/users/cabinet/'
+    # success_url = '/users/cabinet/'
     # form_class = UserForm
 
     fields = ['email', 'username', 'first_name', 'last_name',]
 
-    # def form_valid(self, form):
-    #     #save cleaned post data
-    #     email = form.cleaned_data.get('email')
-    #     user = User.objects.filter(email=email)
-    #     if len(user) == 1 and user[0] != self.request.user:
-    #         form.ValidationError(_(u"Other group has the same title!3"))
-    #
-    #     return super(UserUpdateView, self).form_valid(form)
+    def get_success_url(self):
+        return reverse('cabinet')
 
     def post(self, request, *args, **kwargs):
         if request.POST.get('cancel_button'):
