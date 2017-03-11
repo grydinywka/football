@@ -110,9 +110,13 @@ class FormTeamsView(RedirectView):
             tournament = Tournament.objects.get(pk=tourn_id)
             self.url = reverse('tournament_detail', kwargs={'tid':tourn_id})
             self.form_teams(tournament, request, tourn_id)
-            # print "WWWWWWWWWWWWWWWWWWWWWWWWWWWW " + tournament.__str__()
-
         else:
             self.url = reverse('home')
         return super(FormTeamsView, self).get(request,  *args, **kwargs)
+
+
+class TourUserListView(DetailView):
+    template_name = 'football_app/tournament_users.html'
+    model = Tournament
+    pk_url_kwarg = 'tid'
 

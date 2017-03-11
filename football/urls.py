@@ -24,7 +24,7 @@ from django.views.generic.base import RedirectView
 from django.views.generic import TemplateView
 from users_app.views import CabinetView, UserUpdateView
 from football_app.views import TournamentView, TournamentDetailView,\
-    TournamentUpdateView, TournamentCreateView, FormTeamsView
+    TournamentUpdateView, TournamentCreateView, FormTeamsView, TourUserListView
 
 from registration.backends.simple.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^tournament/(?P<tid>\d+)/update/$', TournamentUpdateView.as_view(), name="tournament_update"),
     url(r'^tournament/create/$', TournamentCreateView.as_view(), name="tournament_create"),
     url(r'^tournament/form_team/$', FormTeamsView.as_view(), name="form_teams"),
+    url(r'^tournament/(?P<tid>\d+)/users/$', TourUserListView.as_view(), name="tournament_users"),
 
     # User Related urls
     url(r'^users/auth/$', TemplateView.as_view(template_name='users_app/authpage.html'), name='authpage'),

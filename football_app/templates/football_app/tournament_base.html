@@ -1,0 +1,32 @@
+{% extends "football_app/base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Detail tournament{% endblock meta_title %}
+
+{% block title %}{% endblock title %}
+
+{% block content %}
+<ul class="nav nav-tabs" role="tablist">
+
+    <li role="presentation" {% url 'tournament_users' tournament.id as the_url %}\
+    {% if the_url in request.path%}class="active"{% endif %}>
+        <a href="{% url 'tournament_users' tournament.id %}" data-toogle="tab" role="tab" class="nav-link">Contestants
+        </a>
+    </li>
+    <li role="presentation" {% url 'tournament_detail' tournament.id as the_url %}\
+    {% if the_url in request.path%}class="active"{% endif %}>
+        <a href="{% url 'tournament_detail' tournament.id %}" data-toogle="tab" role="tab" class="nav-link">Teams</a>
+    </li>
+    <li role="presentation">
+        <a href="{% url 'tournament_detail' tournament.id %}"\
+           data-toogle="tab" role="tab" class="nav-link">Champoinship</a>
+    </li>
+    <li role="presentation">
+        <a href="{% url 'tournament_detail' tournament.id %}"\
+           data-toogle="tab" role="tab" class="nav-link">Play-off</a>
+    </li>
+</ul>
+
+{%block inner%}{% endblock inner %}
+{% endblock content %}

@@ -1,11 +1,10 @@
-{% extends "football_app/base.html" %}
+{% extends "football_app/tournament_base.html" %}
 
 {% load static from staticfiles %}
 
 {% block meta_title %} - Create tournament{% endblock meta_title %}
 
-{% block title %}Tournament's creating: {% endblock title %}
-
+{% block title %}Create tournament:{% endblock title %}
 
 {% block content %}
 <form action="{% url 'tournament_create' %}" method="post" enctype="multipart/form-data">

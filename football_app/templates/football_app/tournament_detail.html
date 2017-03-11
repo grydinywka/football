@@ -1,4 +1,4 @@
-{% extends "football_app/base.html" %}
+{% extends "football_app/tournament_base.html" %}
 
 {% load static from staticfiles %}
 
@@ -7,10 +7,25 @@
 {% block title %}{{ tournament }}: {% endblock title %}
 
 
-{% block content %}
+{% block inner %}
 
 
 {% if user.is_staff %}
     <a href="{% url 'tournament_update' tournament.id %}" class="btn btn-default">Edit this tournament</a>
 {% endif %}
-{% endblock content %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>commands:</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for team in tournament.command_set.all %}
+        <tr>
+            <td>{{ team }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock inner %}
