@@ -1,0 +1,23 @@
+{% extends "football_app/base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Update tournament{% endblock meta_title %}
+
+{% block title %}{{ tournament }}: {% endblock title %}
+
+{% block content %}
+<div>
+    <p class="lead"><a href="#">Edit user's list -></a></p>
+    <p class="lead"><a href="{% url 'form_teams' %}?tournament={{ tournament.id }}">Form teams from users and set teams to
+        the tournament
+        -></a></p>
+</div>
+
+<ul>
+    <p>users:</p>
+    {% for user in tournament.users.all %}
+        <li>{{ user }}</li>
+    {% endfor %}
+</ul>
+{% endblock content %}

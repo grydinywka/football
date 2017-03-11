@@ -1,5 +1,9 @@
 /* main css file */
 
+/* * {
+    border: 1px solid red;
+}  */
+
 #user-toolbar {
     margin-top: 20px;
     padding-right: 20px;
@@ -8,4 +12,12 @@
 
 #buttons-ch div {
     margin: 20px;
+}
+
+#header h1 a {
+    color: black;
+}
+
+#create-btn {
+    margin: 20px 0 10px;
 }

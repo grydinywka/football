@@ -4,19 +4,24 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.views.generic import TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView, UpdateView
 from django.views.generic.edit import FormView
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from users_app.models import AvatarProfile
 from users_app.forms import UserForm
+from django.contrib.auth.models import Permission
 
 
 class LoginRequiredMixinCustom(LoginRequiredMixin):
     login_url = "/users/auth/"
     # redirect_field_name = "next"
     raise_exception = False
+
+
+class PermissionRequiredMixinCustom(PermissionRequiredMixin):
+    permission_required = (Permission.objects.all()[0],)
 
 
 class CabinetView(LoginRequiredMixinCustom, TemplateView):

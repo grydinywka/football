@@ -1,0 +1,16 @@
+{% extends "football_app/base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Detail tournament{% endblock meta_title %}
+
+{% block title %}{{ tournament }}: {% endblock title %}
+
+
+{% block content %}
+
+
+{% if user.is_staff %}
+    <a href="{% url 'tournament_update' tournament.id %}" class="btn btn-default">Edit this tournament</a>
+{% endif %}
+{% endblock content %}

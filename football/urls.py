@@ -23,7 +23,8 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic.base import RedirectView
 from django.views.generic import TemplateView
 from users_app.views import CabinetView, UserUpdateView
-from football_app.views import TournamentView
+from football_app.views import TournamentView, TournamentDetailView,\
+    TournamentUpdateView, TournamentCreateView, FormTeamsView
 
 from registration.backends.simple.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
@@ -31,6 +32,10 @@ from registration.forms import RegistrationFormUniqueEmail
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', TournamentView.as_view(), name='home'),
+    url(r'^tournament/(?P<tid>\d+)/detail/$', TournamentDetailView.as_view(), name="tournament_detail"),
+    url(r'^tournament/(?P<tid>\d+)/update/$', TournamentUpdateView.as_view(), name="tournament_update"),
+    url(r'^tournament/create/$', TournamentCreateView.as_view(), name="tournament_create"),
+    url(r'^tournament/form_team/$', FormTeamsView.as_view(), name="form_teams"),
 
     # User Related urls
     url(r'^users/auth/$', TemplateView.as_view(template_name='users_app/authpage.html'), name='authpage'),
