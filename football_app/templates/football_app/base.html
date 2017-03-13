@@ -21,8 +21,17 @@
         <!-- Start Header -->
 			<div id="header" class="bg-success" >
                 <div class="row">
+					<div class="col-xs-3">
+						<p class="lead text-center" id="tourn-list">
+							<a href="{% url 'home' %}">Tournaments</a>
+							{% if tournament %}
+							<a href="{% url 'tournament_users_list' tournament.id %}"> >> #{{ tournament.id }}</a>
+							{% endif %}
+						</p>
+
+					</div>
                     <!-- Logo -->
-                    <div class="col-xs-offset-3 col-xs-6">
+                    <div class="col-xs-offset-0 col-xs-6">
                         <h1 class="text-center"><a href="{% url 'home' %}">Table Football</a></h1>
                     </div>
 

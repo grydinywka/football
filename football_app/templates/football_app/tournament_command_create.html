@@ -1,0 +1,24 @@
+{% extends "football_app/tournament_base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Create and add command to tournament{% endblock meta_title %}
+
+
+
+{% block content %}
+    {% if are_contestants %}
+    <form action="{% url 'tournament_command_create' tournament.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table class="table">
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Save" name="add_button"
+        class="btn btn-primary" />
+    </form>
+    {% else %}
+    <p class="lead">Every contestant of the tournament belongs to some Command of the tournament.
+        Therefore it is forbidden to create new Command</p>
+    <a href="{% url 'tournament_commands_list' tournament.id %}">Back to command list</a>
+    {% endif %}
+{% endblock content %}

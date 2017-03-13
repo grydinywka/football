@@ -4,19 +4,24 @@
 
 {% block meta_title %} - Detail tournament{% endblock meta_title %}
 
-{% block title %}{% endblock title %}
+{% block title %}
+<a href="{% url 'tournament_users_list' tournament.id %}">{{ tournament }}:</a>
+{% endblock title %}
 
 {% block content %}
 <ul class="nav nav-tabs" role="tablist">
 
-    <li role="presentation" {% url 'tournament_users' tournament.id as the_url %}\
+    <li role="presentation" {% url 'tournament_users_list' tournament.id as the_url %}\
     {% if the_url in request.path%}class="active"{% endif %}>
-        <a href="{% url 'tournament_users' tournament.id %}" data-toogle="tab" role="tab" class="nav-link">Contestants
+        <a href="{% url 'tournament_users_list' tournament.id %}" data-toogle="tab" role="tab"
+           class="nav-link">Contestants
         </a>
     </li>
-    <li role="presentation" {% url 'tournament_detail' tournament.id as the_url %}\
+    <li role="presentation" {% url 'tournament_commands_list' tournament.id as the_url %}\
     {% if the_url in request.path%}class="active"{% endif %}>
-        <a href="{% url 'tournament_detail' tournament.id %}" data-toogle="tab" role="tab" class="nav-link">Teams</a>
+        <a href="{% url 'tournament_commands_list' tournament.id %}" data-toogle="tab" role="tab"
+           class="nav-link">Commands
+        </a>
     </li>
     <li role="presentation">
         <a href="{% url 'tournament_detail' tournament.id %}"\

@@ -4,28 +4,6 @@
 
 {% block meta_title %} - Detail tournament{% endblock meta_title %}
 
-{% block title %}{{ tournament }}: {% endblock title %}
+{% block content %}
 
-
-{% block inner %}
-
-
-{% if user.is_staff %}
-    <a href="{% url 'tournament_update' tournament.id %}" class="btn btn-default">Edit this tournament</a>
-{% endif %}
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>commands:</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for team in tournament.command_set.all %}
-        <tr>
-            <td>{{ team }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endblock inner %}
+{% endblock content %}

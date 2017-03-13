@@ -1,0 +1,18 @@
+{% extends "football_app/tournament_base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Update Tournament's Command{% endblock meta_title %}
+
+{% block title %}
+<a href="{% url 'tournament_users_list' command.tournament.id %}">{{ command.tournament }}:</a>
+{% endblock title %}
+
+{% block content %}
+<form action="{% url 'tournament_command_update' command.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Update Commands' list" name="update_commands"
+           class="btn btn-primary" />
+</form>
+{% endblock content %}

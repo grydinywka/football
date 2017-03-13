@@ -48,6 +48,16 @@ class Command(models.Model):
             name2 += ' ' + self.contestant2.first_name[0] + '.'
         return "{} + {}".format(name1, name2)
 
+    def is_contestant(self, contestant):
+        if contestant == self.contestant1 or contestant == self.contestant2:
+            return True
+        return False
+
+    @property
+    def get_contestants(self):
+        return [self.contestant1, self.contestant2]
+
+
 
 class Round(models.Model):
     """

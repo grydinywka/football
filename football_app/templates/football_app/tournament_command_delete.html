@@ -1,0 +1,18 @@
+{% extends "football_app/tournament_base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Commands of tournament{% endblock meta_title %}
+
+{% block title %}
+Deleting {{ command }}
+{% endblock title %}
+
+
+{% block content %}
+<form action="{% url 'tournament_command_delete' command.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>Do you really want to delete command {{ command }} - #{{ command.id }}?</p>
+    <input type="submit" value="yes" name="delete_btn" class="btn btn-danger"/>
+</form>
+{% endblock content %}
