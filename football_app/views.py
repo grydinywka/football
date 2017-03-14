@@ -66,7 +66,7 @@ class FormCommandsView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, 
         for command in tournament.command_set.all():
             command.delete()
 
-        contestants = tournament.users.all().order_by('rateuser__rate', 'id')
+        contestants = tournament.contestants.all().order_by('rateuser__rate', 'id')
         limit = contestants.count()
         if limit == 0:
             messages.warning(request, "No contestants :(")
@@ -134,7 +134,7 @@ class TournamentUsersUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixi
 
     def get_form(self, form_class=None):
         kwargs = self.get_form_kwargs()
-        kwargs['initial']['users_pk'] = [u.pk for u in self.object.users.all()]
+        kwargs['initial']['users_pk'] = [u.pk for u in self.object.contestants.all()]
         # print kwargs
         if form_class is None:
             form_class = self.get_form_class()
@@ -279,6 +279,6 @@ class TourCommandDeleteView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
     pk_url_kwarg = 'comid'
 
     def get_success_url(self):
-        command_id = self.kwargs['comid']
-        messages.success(self.request, 'Command {} successful deleted!'.format(command_id))
-        return reverse('home')
+        command = Command.objects.get(pk=self.kwargs['comid'])
+        messages.success(self.request, 'Command {} successful deleted!'.format(command))
+        return reverse('tournament_commands_list', kwargs={'tid': command.tournament.id})

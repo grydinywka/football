@@ -25,19 +25,19 @@ class UpdateTourUsersForm(forms.ModelForm):
 
     class Meta:
         model = Tournament
-        fields = ('users',)
+        fields = ('contestants',)
         exclude = ()
 
     def __init__(self, *args, **kwargs):
         super(UpdateTourUsersForm, self).__init__(*args, **kwargs)
-        self.initial["users"] = kwargs['initial']['users_pk']
+        self.initial["contestants"] = kwargs['initial']['users_pk']
         # self.fields["users2"].queryset = User.objects.filter(id__in=[1,29])
 
-    users = forms.MultipleChoiceField(
-        label='Users*',
-        help_text="Choose Users",
-        error_messages={'required': "Field Users is required"},
-        choices = [(user.id, user.get_full_name() or user) for user in User.objects.all()],
+    contestants = forms.MultipleChoiceField(
+        label='Contestants*',
+        help_text="Choose Contestants",
+        error_messages={'required': "Field Contestants is required"},
+        choices = [(contestant.id, contestant.get_full_name() or contestant) for contestant in User.objects.all()],
         widget=forms.SelectMultiple(attrs={'size': '10',
                                            'class': 'form-control'
                                            })

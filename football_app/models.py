@@ -16,7 +16,7 @@ class Tournament(models.Model):
     """
 
     rounds = models.ManyToManyField('football_app.Round', blank=True, default=None)
-    users = models.ManyToManyField(User, blank=True, default=None)
+    contestants = models.ManyToManyField(User, blank=True, default=None)
     title = models.CharField(blank=False, max_length=255, null=True)
 
     statuses = (
