@@ -27,8 +27,9 @@
         <a href="{% url 'championship_games_list' tournament.id %}"\
            data-toogle="tab" role="tab" class="nav-link">Champoinship</a>
     </li>
-    <li role="presentation">
-        <a href="{% url 'tournament_detail' tournament.id %}"\
+    {% url 'playoff_games_list' tournament.id as the_url %}
+    <li role="presentation" {% if the_url in request.path%}class="active"{% endif %}>
+        <a href="{% url 'playoff_games_list' tournament.id %}"\
            data-toogle="tab" role="tab" class="nav-link">Play-off</a>
     </li>
 </ul>

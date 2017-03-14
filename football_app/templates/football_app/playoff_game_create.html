@@ -1,0 +1,14 @@
+{% extends "football_app/tournament_base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Playoff - Game's creating{% endblock meta_title %}
+
+{% block content %}
+<p>Creating game:</p>
+<form action="#" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create game" name="create_game_button" />
+</form>
+{% endblock content %}

@@ -2,14 +2,13 @@
 
 {% load static from staticfiles %}
 
-{% block meta_title %} - Championship - Games' list{% endblock meta_title %}
+{% block meta_title %} - Playoff - Games' list{% endblock meta_title %}
 
 {% block inner %}
 {% if user.is_staff %}
-    <a href="{% url 'championship_games_generate' tournament.id %}" class="btn btn-default">
-        Generate games
+    <a href="{% url 'playoff_game_create' tournament.id %}" class="btn btn-default">
+        Create games
     </a>
-
 {% endif %}
 <table class="table">
     <thead>
