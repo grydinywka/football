@@ -20,9 +20,21 @@ class Tournament(models.Model):
         Tournament contains rounds and contestants and status
     """
 
-    championship = models.ForeignKey('football_app.Round', blank=True, null=True, default=None,
-                                     related_name='championship')
-    playoff = models.ForeignKey('football_app.Round', blank=True, null=True, default=None)
+    championship = models.OneToOneField(
+        'football_app.Round',
+        blank=True,
+        null=True,
+        default=None,
+        related_name='tournament_chip',
+        on_delete=models.SET_NULL
+    )
+    playoff = models.OneToOneField(
+        'football_app.Round',
+        blank=True,
+        null=True,
+        default=None,
+        on_delete=models.SET_NULL
+    )
     contestants = models.ManyToManyField(User, blank=True, default=None)
     title = models.CharField(blank=False, max_length=255, null=True)
 
