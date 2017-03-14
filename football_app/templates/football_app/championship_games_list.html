@@ -16,13 +16,15 @@
 <table class="table">
     <thead>
         <tr>
+            <th>#</th>
             <th>Games:</th>
         </tr>
     </thead>
     <tbody>
-        {% for round in rounds %}
+        {% for game in games %}
         <tr>
-            <td><a href="#">{{ round }}</a></td>
+            <td>{{ forloop.counter }}</td>
+            <td><a href="#">{{ game }}</a></td>
         </tr>
         {% endfor %}
     </tbody>

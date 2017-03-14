@@ -9,14 +9,17 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from users_app.views import LoginRequiredMixinCustom, PermissionRequiredMixinCustom
-from football_app.models import Tournament, Command, Round, Game
+from football_app.models import Tournament, Command, Round, Game,\
+    IS_NOT_STARTED, ENDED,\
+    CHAMPIONSHIP, PLAYOFF_1_16, PLAYOFF_1_8, PLAYOFF_1_4,\
+    PLAYOFF_1_2, PLAYOFF_1_1, PLAYOFF_3
 from football_app.forms import ChampionshipGamesGenerateForm
 
 
 class ChampionshipGamesListView(LoginRequiredMixinCustom, ListView):
     template_name = "football_app/championship_games_list.html"
-    model = Round
-    context_object_name = 'rounds'
+    model = Game
+    context_object_name = 'games'
     tournament = None
 
     def get_context_data(self, **kwargs):
@@ -26,8 +29,8 @@ class ChampionshipGamesListView(LoginRequiredMixinCustom, ListView):
         return context
 
     def get_queryset(self):
-        rounds = Round.objects.filter(tournament=self.tournament)
-        return rounds
+        games = Game.objects.filter(round=self.tournament.championship)
+        return games
 
     def dispatch(self, request, *args, **kwargs):
         try:
@@ -62,10 +65,34 @@ class ChampionshipGamesGenerateView(LoginRequiredMixinCustom, PermissionRequired
 
         return context
 
-    def generate_rounds(self, amount_games):
-        pass
+    def generate_games(self, amount_games):
+
+        try:
+            championship = Round.objects.get(tournament_chip=self.tournament)
+        except Round.DoesNotExist:
+            championship = Round.objects.create(
+                    description="championchip for {}".format(self.tournament))
+            self.tournament.championship = championship
+            self.tournament.save()
+        else:
+            championship.games.all().delete()
+        commands = self.tournament.command_set.all()
+        # print championship
+        for i in xrange(0,commands.count()-1):
+            j = i + 1
+            while j < commands.count():
+                for k in range(amount_games):
+                    game = Game.objects.create(
+                        command1=commands[i],
+                        command2=commands[j],
+                        status=IS_NOT_STARTED,
+                        kind=CHAMPIONSHIP
+                    )
+                    championship.games.add(game)
+                j += 1
 
     def form_valid(self, form):
         amount = form.cleaned_data['amount']
-        print amount
+        # print amount
+        self.generate_games(amount)
         return HttpResponseRedirect(self.get_success_url())
