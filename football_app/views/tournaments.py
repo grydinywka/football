@@ -264,7 +264,7 @@ class TourCommandUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         if request.POST.get('contestant1') == request.POST.get('contestant2'):
-            print dir(form)
+            # print dir(form)
             form.add_error("contestant1", "Check the contestant1")
             form.add_error("contestant2", "Check the contestant2")
 

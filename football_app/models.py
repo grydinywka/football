@@ -103,6 +103,7 @@ class Game(models.Model):
 
     statuses = (
         (IS_NOT_STARTED, 'is not started'),
+        (CURRENT, 'current'),
         (ENDED, 'ended'),
     )
     status = models.PositiveSmallIntegerField(blank=False, null=True, default=IS_NOT_STARTED, choices=statuses)
@@ -123,4 +124,6 @@ class Game(models.Model):
             score = "? - ?"
         elif self.status == ENDED:
             score = "{} - {}".format(self.score1, self.score2)
+        elif self.status == CURRENT:
+            score = "{} - {}(now is playing)".format(self.score1, self.score2)
         return "{} {} {}".format(self.command1, score, self.command2)

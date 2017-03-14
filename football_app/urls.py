@@ -7,7 +7,8 @@ from football_app.views.tournaments import TournamentView, TournamentDetailView,
 
 from football_app.views.rounds import ChampionshipGamesListView,\
     ChampionshipGamesGenerateView,PlayoffGamesListView,\
-    PlayoffGameCreateView
+    PlayoffGameCreateView, PlayoffGameUpdateScore,\
+    PlayoffGameDeleteView
 
 urlpatterns = [
     url(r'^list/$', TournamentView.as_view(), name='home'),
@@ -33,4 +34,8 @@ urlpatterns = [
         name="playoff_games_list"),
     url(r'^(?P<tid>\d+)/playoff/game/create/$', PlayoffGameCreateView.as_view(),
         name="playoff_game_create"),
+    url(r'^(?P<tid>\d+)/playoff/game/(?P<gid>\d+)/score_update/$', PlayoffGameUpdateScore.as_view(),
+        name="playoff_game_score_update"),
+    url(r'^(?P<tid>\d+)/playoff/game/(?P<gid>\d+)/delete/$', PlayoffGameDeleteView.as_view(),
+        name="playoff_game_delete"),
 ]

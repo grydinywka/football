@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from users_app.views import LoginRequiredMixinCustom, PermissionRequiredMixinCustom
 from football_app.models import Tournament, Command, Round, Game,\
-    IS_NOT_STARTED, ENDED,\
+    IS_NOT_STARTED, CURRENT, ENDED,\
     CHAMPIONSHIP, PLAYOFF_1_16, PLAYOFF_1_8, PLAYOFF_1_4,\
     PLAYOFF_1_2, PLAYOFF_1_1, PLAYOFF_3
 from football_app.forms import ChampionshipGamesGenerateForm
@@ -48,6 +48,7 @@ class ChampionshipGamesGenerateView(LoginRequiredMixinCustom, PermissionRequired
     tournament = None
 
     def get_success_url(self):
+        messages.info(self.request, "Games were generated successfully")
         return reverse('championship_games_list', kwargs={'tid': self.kwargs['tid']})
 
     def dispatch(self, request, *args, **kwargs):
@@ -128,6 +129,7 @@ class PlayoffGameCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
         return super(PlayoffGameCreateView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
+        messages.info(self.request, "Game was created successfully")
         return reverse('playoff_games_list', kwargs={'tid': self.kwargs['tid']})
 
     def get_free_commands(self):
@@ -147,3 +149,55 @@ class PlayoffGameCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
         print dir(form.fields['kind'])
         print form.fields['kind']._set_choices(form.fields['kind']._choices[1:])
         return form
+
+    def post(self, request, *args, **kwargs):
+        post_parent = super(PlayoffGameCreateView, self).post(request, *args, **kwargs)
+        form = self.get_form()
+        if request.POST.get('command1') == request.POST.get('command2'):
+            # print dir(form)
+            form.add_error("command1", "Check the command1")
+            form.add_error("command2", "Check the command2")
+
+            messages.warning(request, "The same Command for both fields of command")
+            return self.form_invalid(form)
+
+        return post_parent
+
+
+
+class PlayoffGameUpdateScore(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
+    template_name = 'football_app/playoff_game_score_update.html'
+    model = Game
+    pk_url_kwarg = 'gid'
+    tournament = None
+    fields = ('score1', 'score2', 'status')
+
+    def get_success_url(self):
+        messages.info(self.request, "Score was updated for game {}".format(self.get_object()))
+        return reverse('playoff_games_list', kwargs={'tid': self.kwargs['tid']})
+
+    def get_context_data(self, **kwargs):
+        context = super(PlayoffGameUpdateScore, self).get_context_data(**kwargs)
+        context['tournament'] = self.tournament
+
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            self.tournament = Tournament.objects.get(pk=self.kwargs['tid'])
+        except Tournament.DoesNotExist:
+            messages.warning(request, "Tournament with id == {} does not exist".format(self.kwargs['tid']))
+            return HttpResponseRedirect(reverse('home'))
+
+        return super(PlayoffGameUpdateScore, self).dispatch(request, *args, **kwargs)
+
+
+class PlayoffGameDeleteView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, DeleteView):
+    template_name = 'football_app/playoff_game_delete.html'
+    model = Game
+    pk_url_kwarg = 'gid'
+
+    def get_success_url(self):
+        command = Game.objects.get(pk=self.kwargs['gid'])
+        messages.success(self.request, 'Game {} successful deleted!'.format(command))
+        return reverse('playoff_games_list', kwargs={'tid': self.kwargs['tid']})
