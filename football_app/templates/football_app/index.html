@@ -4,38 +4,8 @@
 
 {% block meta_title %} - Main page{% endblock meta_title %}
 
-{% block title %}Tournament's list: {% endblock title %}
-{% block create_btn %}
-    {% if user.is_staff %}
-    <a id="create-btn" class="btn btn-success" href="{% url 'tournament_create' %}">Create Tournament</a>
-    {% endif %}
-{% endblock create_btn %}
-
+{% block title %}Hello on index page:) {% endblock title %}
 
 {% block content %}
-{% if not tournaments %}
-
-<div class="alert alert-warning">
-    <span>There are not exist any students in list yet!</span>
-</div>
-
-{% else %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>title</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for tournament in tournaments %}
-        <tr>
-            <td>
-                <a href="{% url 'tournament_users_list' tournament.id %}">{{ tournament }}</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endif %}
-
+<p class="lead"><a href="{% url 'home' %}">Go to reviewing -></a></p>
 {% endblock content %}

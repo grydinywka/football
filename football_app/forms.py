@@ -109,3 +109,14 @@ class CreateTournCommandForm(forms.ModelForm):
             self._errors["contestant2"] = ["Check the contestant"]
             raise forms.ValidationError('You chosen the same contestant twice!')
         return self.cleaned_data
+
+
+class ChampionshipGamesGenerateForm(forms.Form):
+    """doc str for ChampionshipRoundGenerateForm"""
+    amount = forms.IntegerField(
+        max_value=5,
+        min_value=1,
+        label='Amount',
+        help_text="Type amount of games which every command will play with every other command of the tournament",
+        error_messages={'required': "Field Amount is required"},
+    )

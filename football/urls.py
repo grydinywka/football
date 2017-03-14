@@ -28,7 +28,7 @@ from registration.forms import RegistrationFormUniqueEmail
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-
+    url(r'^$', TemplateView.as_view(template_name='football_app/index.html'), name='index'),
     url(r'^tournament/', include('football_app.urls')),
 
     # User Related urls

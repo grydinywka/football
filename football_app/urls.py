@@ -1,9 +1,12 @@
 from django.conf.urls import url, include
 
-from football_app.views import TournamentView, TournamentDetailView,\
+from football_app.views.tournaments import TournamentView, TournamentDetailView,\
     TournamentUsersUpdateView, TournamentCreateView, FormCommandsView,\
     TourUsersListView, TourCommandsListView, TourCommandUpdateView,\
     TourCommandCreateView, TourCommandDeleteView
+
+from football_app.views.rounds import ChampionshipGamesListView,\
+                                      ChampionshipGamesGenerateView
 
 urlpatterns = [
     url(r'^list/$', TournamentView.as_view(), name='home'),
@@ -19,4 +22,10 @@ urlpatterns = [
         name="tournament_command_update"),
     url(r'^(?P<tid>\d+)/command_delete/(?P<comid>\d+)$', TourCommandDeleteView.as_view(),
         name="tournament_command_delete"),
+
+    # rounds section
+    url(r'^(?P<tid>\d+)/championship/$', ChampionshipGamesListView.as_view(),
+        name="championship_games_list"),
+    url(r'^(?P<tid>\d+)/championship/games/generate/$', ChampionshipGamesGenerateView.as_view(),
+        name="championship_games_generate"),
 ]

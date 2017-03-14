@@ -1,0 +1,19 @@
+{% extends "football_app/tournament_base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Championship - Games' generate{% endblock meta_title %}
+
+{% block title %}
+<a href="{% url 'tournament_users_list' tournament.id %}">{{ tournament }}:</a>
+{% endblock title %}
+
+{% block content %}
+<form action="#" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="table">
+    {{ form.as_table }}
+    </table>
+    <input type="submit" name="generate_btn" value="Generate" />
+</form>
+{% endblock content %}

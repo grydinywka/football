@@ -15,7 +15,7 @@ from football_app.forms import CreateToutnamentForm, UpdateTourUsersForm,\
 
 
 class TournamentView(LoginRequiredMixinCustom, ListView):
-    template_name='football_app/index.html'
+    template_name='football_app/tournaments_list.html'
     context_object_name = 'tournaments'
     model = Tournament
 
