@@ -29,7 +29,12 @@ class ChampionshipGamesListView(LoginRequiredMixinCustom, ListView):
         return context
 
     def get_queryset(self):
-        games = Game.objects.filter(round=self.tournament.championship)
+        if self.tournament.championship:
+            games = Game.objects.filter(round=self.tournament.championship)
+        else:
+            games = None
+        # print self.tournament.championship
+        # print games
         return games
 
     def dispatch(self, request, *args, **kwargs):
@@ -103,7 +108,11 @@ class PlayoffGamesListView(ChampionshipGamesListView):
     template_name = "football_app/playoff_games_list.html"
 
     def get_queryset(self):
-        games = Game.objects.filter(round=self.tournament.playoff)
+        # games = Game.objects.filter(round=self.tournament.playoff)
+        if self.tournament.playoff:
+            games = Game.objects.filter(round=self.tournament.playoff)
+        else:
+            games = None
         return games
 
 
@@ -146,8 +155,8 @@ class PlayoffGameCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
         # choices.extend([(c.id, c) for c in self.get_object().get_contestants])
         form.fields['command1']._set_choices(choices)
         form.fields['command2']._set_choices(choices)
-        print dir(form.fields['kind'])
-        print form.fields['kind']._set_choices(form.fields['kind']._choices[1:])
+        # print dir(form.fields['kind'])
+        form.fields['kind']._set_choices(form.fields['kind']._choices[1:])
         return form
 
     def post(self, request, *args, **kwargs):
@@ -158,11 +167,21 @@ class PlayoffGameCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
             form.add_error("command1", "Check the command1")
             form.add_error("command2", "Check the command2")
 
-            messages.warning(request, "The same Command for both fields of command")
             return self.form_invalid(form)
 
         return post_parent
 
+    def form_valid(self, form):
+        game = Game.objects.create(**form.cleaned_data)
+        if self.tournament.playoff:
+            self.tournament.playoff.games.add(game)
+        else:
+            playoff = Round.objects.create(description="playoff for Tournament #{}".format(self.tournament.id))
+            self.tournament.playoff = playoff
+            self.tournament.playoff.games.add(game)
+            self.tournament.save()
+
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class PlayoffGameUpdateScore(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
