@@ -21,7 +21,15 @@ class LoginRequiredMixinCustom(LoginRequiredMixin):
 
 
 class PermissionRequiredMixinCustom(PermissionRequiredMixin):
-    permission_required = (Permission.objects.all()[0],)
+    permission_required = "auth.add_user"
+
+    def get_redirect_field_name(self):
+        """
+        Override this method to override the redirect_field_name attribute.
+        """
+        messages.warning(self.request, "Please login as admin user for seeing the page you opened!")
+        return self.redirect_field_name
+
 
 
 class CabinetView(LoginRequiredMixinCustom, TemplateView):

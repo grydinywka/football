@@ -33,7 +33,7 @@ class TournamentDetailView(DetailView):
     #     return context
 
 
-class TournamentCreateView(CreateView):
+class TournamentCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, CreateView):
     template_name = 'football_app/tournament_create.html'
     model = Tournament
     fields = ('title', 'users',)
@@ -61,8 +61,11 @@ class TournamentCreateView(CreateView):
 #     return render(request, 'football_app/tournament_create.html', {'form': form})
 
 
-class FormTeamsView(RedirectView):
-    def form_teams(self, tournament, request, tourn_id):
+class FormCommandsView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, RedirectView):
+    def form_commands(self, tournament, request, tourn_id):
+        for command in tournament.command_set.all():
+            command.delete()
+
         contestants = tournament.users.all().order_by('rateuser__rate', 'id')
         limit = contestants.count()
         if limit == 0:
@@ -96,17 +99,17 @@ class FormTeamsView(RedirectView):
                                        contestant1=contestants[i],
                                        contestant2=contestants[j])
 
-            messages.info(request, "Teams for tournament #{} were formed!".format(tourn_id))
+            messages.info(request, "Commands for tournament #{} were formed!".format(tourn_id))
 
     def get(self, request,  *args, **kwargs):
         tourn_id = request.GET.get('tournament')
         if tourn_id:
             tournament = Tournament.objects.get(pk=tourn_id)
-            self.url = reverse('tournament_detail', kwargs={'tid':tourn_id})
-            self.form_teams(tournament, request, tourn_id)
+            self.url = reverse('tournament_commands_list', kwargs={'tid':tourn_id})
+            self.form_commands(tournament, request, tourn_id)
         else:
             self.url = reverse('home')
-        return super(FormTeamsView, self).get(request,  *args, **kwargs)
+        return super(FormCommandsView, self).get(request,  *args, **kwargs)
 
 
 class TourUsersListView(DetailView):
@@ -121,7 +124,7 @@ class TourCommandsListView(DetailView):
     model = Tournament
 
 
-class TournamentUsersUpdateView(UpdateView):
+class TournamentUsersUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
     template_name = 'football_app/tournament_users_update.html'
     pk_url_kwarg = 'tid'
     model = Tournament
@@ -170,7 +173,7 @@ class TournamentUsersUpdateView(UpdateView):
 #             return self.form_invalid(form)
 
 
-class TourCommandCreateView(CreateView):
+class TourCommandCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, CreateView):
     template_name = 'football_app/tournament_command_create.html'
     pk_url_kwarg = 'tid'
     model = Command
@@ -198,10 +201,11 @@ class TourCommandCreateView(CreateView):
 
     def form_valid(self, form):
         tournament = Tournament.objects.get(pk=self.kwargs['tid'])
-        Command.objects.create(tournament=tournament,
+        command = Command.objects.create(tournament=tournament,
             contestant1=form.cleaned_data['contestant1'],
             contestant2=form.cleaned_data['contestant2']
             )
+        messages.success(self.request, 'Command {} successful created!'.format(command))
 
         return super(TourCommandCreateView, self).form_valid(form)
 
@@ -225,16 +229,17 @@ class TourCommandCreateView(CreateView):
         return form_class(**kwargs)
 
 
-class TourCommandUpdateView(UpdateView):
+class TourCommandUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
     template_name = 'football_app/tournament_command_update.html'
     pk_url_kwarg = 'comid'
     model = Command
     fields = ('contestant1', 'contestant2',)
 
     def get_tournament_id(self):
-        return self.get_object().tournament.id
+        return self.kwargs['tid']
 
-    def get_success_url(self, ):
+    def get_success_url(self):
+        messages.success(self.request, 'Command {} successful updated!'.format(self.get_object()))
         return reverse('tournament_commands_list', kwargs={"tid": self.get_tournament_id()})
 
     def get_free_contestant(self):
@@ -257,7 +262,6 @@ class TourCommandUpdateView(UpdateView):
         return form
 
     def post(self, request, *args, **kwargs):
-        super(TourCommandUpdateView, self).post(request, *args, **kwargs)
         form = self.get_form()
         if request.POST.get('contestant1') == request.POST.get('contestant2'):
             print dir(form)
@@ -269,11 +273,12 @@ class TourCommandUpdateView(UpdateView):
         return super(TourCommandUpdateView, self).post(request, *args, **kwargs)
 
 
-class TourCommandDeleteView(DeleteView):
+class TourCommandDeleteView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, DeleteView):
     template_name = 'football_app/tournament_command_delete.html'
     model = Command
     pk_url_kwarg = 'comid'
 
     def get_success_url(self):
-        messages.success(self.request, 'Command successful deleted!')
+        command_id = self.kwargs['comid']
+        messages.success(self.request, 'Command {} successful deleted!'.format(command_id))
         return reverse('home')

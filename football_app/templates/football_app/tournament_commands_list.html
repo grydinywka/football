@@ -9,9 +9,8 @@
 
 
 {% if user.is_staff %}
-    <a href="{% url 'tournament_command_update' tournament.id %}" class="btn btn-default">Update commands' list</a>
-    <a href="{% url 'form_teams' %}?tournament={{ tournament.id }}" class="btn btn-default">
-        Form teams auto
+    <a href="{% url 'form_commands' %}?tournament={{ tournament.id }}" class="btn btn-default">
+        Form commands auto
     </a>
     <a href="{% url 'tournament_command_create' tournament.id %}" class="btn btn-default">
         Add a command manually
@@ -27,11 +26,13 @@
     <tbody>
         {% for command in tournament.command_set.all %}
         <tr>
-            <td><a href="{% url 'tournament_command_update' command.id %}">
+            <td><a href="{% url 'tournament_command_update' command.tournament.id command.id %}">
                 {{ command }}
                 </a>
             </td>
-            <td><a href="{% url 'tournament_command_delete' command.id %}">Delete the command</a> </td>
+            {% if user.is_staff %}
+            <td><a href="{% url 'tournament_command_delete' command.tournament.id command.id %}">Delete the command</a> </td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>

@@ -2,22 +2,22 @@
 
 {% load static from staticfiles %}
 
-{% block meta_title %} - User of tournament{% endblock meta_title %}
+{% block meta_title %} - Contestants of tournament{% endblock meta_title %}
 
 {% block inner %}
 {% if user.is_staff %}
-    <a href="{% url 'tournament_users_update' tournament.id %}" class="btn btn-default">Update user's list</a>
+    <a href="{% url 'tournament_users_update' tournament.id %}" class="btn btn-default">Update contestents' list</a>
 {% endif %}
 <table class="table">
     <thead>
         <tr>
-            <th>users:</th>
+            <th>contestants:</th>
         </tr>
     </thead>
     <tbody>
-        {% for user in tournament.users.all %}
+        {% for contestant in tournament.users.all %}
         <tr>
-            <td>{{ user.get_full_name|default:user.username }}</td>
+            <td>{{ contestant.get_full_name|default:contestant.username }}</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -10,7 +10,8 @@ Deleting {{ command }}
 
 
 {% block content %}
-<form action="{% url 'tournament_command_delete' command.id %}" method="post" enctype="multipart/form-data">
+<form action="{% url 'tournament_command_delete' command.tournament.id command.id %}" method="post"
+      enctype="multipart/form-data">
     {% csrf_token %}
     <p>Do you really want to delete command {{ command }} - #{{ command.id }}?</p>
     <input type="submit" value="yes" name="delete_btn" class="btn btn-danger"/>

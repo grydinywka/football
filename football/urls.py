@@ -18,22 +18,16 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
-from django.core.urlresolvers import reverse_lazy
 
 from django.views.generic.base import RedirectView
 from django.views.generic import TemplateView
 from users_app.views import CabinetView, UserUpdateView
-from football_app.views import TournamentView#, TournamentDetailView,\
-#     TournamentUsersUpdateView, TournamentCreateView, FormTeamsView,\
-#     TourUsersListView, TourCommandsListView, TourCommandUpdateView,\
-#     TourCommandCreateView
 
 from registration.backends.simple.views import RegistrationView
 from registration.forms import RegistrationFormUniqueEmail
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', TournamentView.as_view(), name='home'),
 
     url(r'^tournament/', include('football_app.urls')),
 
