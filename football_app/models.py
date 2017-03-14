@@ -7,7 +7,12 @@ CURRENT = 2
 ENDED = 3
 
 CHAMPIONSHIP = 1
-PLAYOFF =2
+PLAYOFF_1_16 = 2
+PLAYOFF_1_8 = 3
+PLAYOFF_1_4 = 4
+PLAYOFF_1_2 = 5
+PLAYOFF_1_1 = 6
+PLAYOFF_3 = 7
 
 
 class Tournament(models.Model):
@@ -15,7 +20,9 @@ class Tournament(models.Model):
         Tournament contains rounds and contestants and status
     """
 
-    rounds = models.ManyToManyField('football_app.Round', blank=True, default=None)
+    championship = models.ForeignKey('football_app.Round', blank=True, null=True, default=None,
+                                     related_name='championship')
+    playoff = models.ForeignKey('football_app.Round', blank=True, null=True, default=None)
     contestants = models.ManyToManyField(User, blank=True, default=None)
     title = models.CharField(blank=False, max_length=255, null=True)
 
@@ -64,11 +71,6 @@ class Round(models.Model):
         Round model contains kind, games, description
     """
 
-    kinds = (
-        (CHAMPIONSHIP, 'championship'),
-        (PLAYOFF, 'play-off'),
-    )
-    kind = models.PositiveSmallIntegerField(blank=False, null=True, default=CHAMPIONSHIP, choices=kinds)
     games = models.ManyToManyField('football_app.Game', blank=True, default=None)
     description = models.CharField(blank=False, null=True, default=None, max_length=256)
 
@@ -92,6 +94,17 @@ class Game(models.Model):
         (ENDED, 'ended'),
     )
     status = models.PositiveSmallIntegerField(blank=False, null=True, default=IS_NOT_STARTED, choices=statuses)
+
+    kinds = (
+        (CHAMPIONSHIP, 'championship'),
+        (PLAYOFF_1_16, 'play-off-1/16'),
+        (PLAYOFF_1_8, 'play-off-1/8'),
+        (PLAYOFF_1_4, 'play-off-1/4'),
+        (PLAYOFF_1_2, 'play-off-1/2'),
+        (PLAYOFF_1_1, 'play-off-final'),
+        (PLAYOFF_3, 'play-off-third-place'),
+    )
+    kind = models.PositiveSmallIntegerField(blank=False, null=True, default=CHAMPIONSHIP, choices=kinds)
 
     def __unicode__(self):
         if self.status == IS_NOT_STARTED:
