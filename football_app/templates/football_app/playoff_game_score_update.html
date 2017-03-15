@@ -4,11 +4,11 @@
 
 {% block meta_title %} - Playoff - Game - score update{% endblock meta_title %}
 
-{% block inner %}
+{% block content %}
 <form action="#" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Update Score" name="update_score_btn" />
 </form>
-{% endblock inner %}
+{% endblock content %}
 

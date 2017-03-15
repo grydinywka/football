@@ -1,4 +1,6 @@
 from random import randint
+import pandas as pd
+import numpy as np
 
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, DetailView,\
@@ -104,6 +106,46 @@ class ChampionshipGamesGenerateView(LoginRequiredMixinCustom, PermissionRequired
         return HttpResponseRedirect(self.get_success_url())
 
 
+class ChampionshipTable(DetailView):
+    pk_url_kwarg = 'tid'
+    template_name = 'football_app/championship_table.html'
+    model = Tournament
+    context_object_name = "tournament"
+
+    def get_data_table(self):
+        data_table = {}
+        tournament = self.get_object()
+
+        s = pd.Series([c for c in tournament.command_set.all()])
+        # for command in tournament.command_set.all():
+        #     dates = pd.date_range('20130101', periods=6)
+        #     df = pd.DataFrame(np.random.randn(6,4), index=dates, columns=list('ABCD'))
+        df = pd.DataFrame({'command' : s})
+        df['played games'] = pd.Series([c.get_played_games_chip_count() for c in df['command'].values])
+        df['wins'] = pd.Series([c.get_wins_chip() for c in df['command'].values])
+        df['defeats'] = pd.Series([c.get_defeats_chip() for c in df['command'].values])
+        df['equals'] = df['played games'].values - df['wins'].values - df['defeats'].values
+        df['Goals - Goals Against'] = pd.Series(["{}-{}".format(c.goals_goals_against()[0],c.goals_goals_against()[1])
+                                                 for c in df['command'].values])
+        df['Difference'] = pd.Series([c.goals_goals_against()[0]-c.goals_goals_against()[1]
+                                                 for c in df['command'].values])
+        df['Points'] = df['wins'].values*3 + df['equals'].values
+
+        df = df.sort_values(['Points'], axis=0,ascending=False)
+
+        return df.to_html(
+                            classes="table table-hover table-striped",
+                            float_format=lambda x: '%.2f' % x,
+                            index=False
+                        )
+
+    def get_context_data(self, **kwargs):
+        context = super(ChampionshipTable, self).get_context_data(**kwargs)
+        context['data_table'] = self.get_data_table()
+
+        return context
+
+
 class PlayoffGamesListView(ChampionshipGamesListView):
     template_name = "football_app/playoff_games_list.html"
 
@@ -184,7 +226,7 @@ class PlayoffGameCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
         return HttpResponseRedirect(self.get_success_url())
 
 
-class PlayoffGameUpdateScore(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
+class GameUpdateScore(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
     template_name = 'football_app/playoff_game_score_update.html'
     model = Game
     pk_url_kwarg = 'gid'
@@ -193,10 +235,12 @@ class PlayoffGameUpdateScore(LoginRequiredMixinCustom, PermissionRequiredMixinCu
 
     def get_success_url(self):
         messages.info(self.request, "Score was updated for game {}".format(self.get_object()))
+        if self.get_object().kind == CHAMPIONSHIP:
+            return reverse('championship_games_list', kwargs={'tid': self.kwargs['tid']})
         return reverse('playoff_games_list', kwargs={'tid': self.kwargs['tid']})
 
     def get_context_data(self, **kwargs):
-        context = super(PlayoffGameUpdateScore, self).get_context_data(**kwargs)
+        context = super(GameUpdateScore, self).get_context_data(**kwargs)
         context['tournament'] = self.tournament
 
         return context
@@ -208,7 +252,7 @@ class PlayoffGameUpdateScore(LoginRequiredMixinCustom, PermissionRequiredMixinCu
             messages.warning(request, "Tournament with id == {} does not exist".format(self.kwargs['tid']))
             return HttpResponseRedirect(reverse('home'))
 
-        return super(PlayoffGameUpdateScore, self).dispatch(request, *args, **kwargs)
+        return super(GameUpdateScore, self).dispatch(request, *args, **kwargs)
 
 
 class PlayoffGameDeleteView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, DeleteView):

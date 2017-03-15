@@ -1,4 +1,5 @@
 from django.conf.urls import url, include
+from django.views.generic import TemplateView
 
 from football_app.views.tournaments import TournamentView, TournamentDetailView,\
     TournamentUsersUpdateView, TournamentCreateView, FormCommandsView,\
@@ -7,8 +8,8 @@ from football_app.views.tournaments import TournamentView, TournamentDetailView,
 
 from football_app.views.rounds import ChampionshipGamesListView,\
     ChampionshipGamesGenerateView,PlayoffGamesListView,\
-    PlayoffGameCreateView, PlayoffGameUpdateScore,\
-    PlayoffGameDeleteView
+    PlayoffGameCreateView, GameUpdateScore,\
+    PlayoffGameDeleteView, ChampionshipTable
 
 urlpatterns = [
     url(r'^list/$', TournamentView.as_view(), name='home'),
@@ -30,12 +31,14 @@ urlpatterns = [
         name="championship_games_list"),
     url(r'^(?P<tid>\d+)/championship/games/generate/$', ChampionshipGamesGenerateView.as_view(),
         name="championship_games_generate"),
+    url(r'^(?P<tid>\d+)/championship/table/$', ChampionshipTable.as_view(),
+        name="championship_table"),
     url(r'^(?P<tid>\d+)/playoff/$', PlayoffGamesListView.as_view(),
         name="playoff_games_list"),
     url(r'^(?P<tid>\d+)/playoff/game/create/$', PlayoffGameCreateView.as_view(),
         name="playoff_game_create"),
-    url(r'^(?P<tid>\d+)/playoff/game/(?P<gid>\d+)/score_update/$', PlayoffGameUpdateScore.as_view(),
-        name="playoff_game_score_update"),
+    url(r'^(?P<tid>\d+)/game/(?P<gid>\d+)/score_update/$', GameUpdateScore.as_view(),
+        name="game_score_update"),
     url(r'^(?P<tid>\d+)/playoff/game/(?P<gid>\d+)/delete/$', PlayoffGameDeleteView.as_view(),
         name="playoff_game_delete"),
 ]

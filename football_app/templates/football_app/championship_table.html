@@ -1,0 +1,36 @@
+{% extends "football_app/tournament_base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Tournament - Table{% endblock meta_title %}
+
+
+{% block content %}
+<p>Table of championship:</p>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Place #</th>
+        <th>Command</th>
+        <th>Played games</th>
+        <th>Wins</th>
+        <th>Defeats</th>
+        <th>Goals - Goals Against</th>
+        <th>Difference</th>
+        <th>Points</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!--{% for i in data_table %}-->
+    <!--<tr>-->
+
+        <!--<td>{{ i }}</td>-->
+
+    <!--</tr>-->
+    <!--{% endfor %}-->
+    </tbody>
+</table>
+
+{{ data_table | safe }}
+<p>{{ data_table.5.w }}</p>
+{% endblock content %}

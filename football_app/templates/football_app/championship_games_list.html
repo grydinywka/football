@@ -11,6 +11,9 @@
     </a>
 
 {% endif %}
+<a href="{% url 'championship_table' tournament.id %}" class="btn btn-default">
+    Table of Championship
+</a>
 <table class="table">
     <thead>
         <tr>
@@ -22,7 +25,11 @@
         {% for game in games %}
         <tr>
             <td>{{ forloop.counter }}</td>
-            <td><a href="#">{{ game }}</a></td>
+            <td>{{ game }}></td>
+            {% if user.is_staff %}
+            <td><a href="{% url 'game_score_update' tournament.id game.id %}">Update Score</a></td>
+            <td><a href="{% url 'playoff_game_delete' tournament.id game.id %}">Delete Game</a></td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>

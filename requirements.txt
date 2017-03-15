@@ -4,12 +4,16 @@ Django==1.10.6
 django-registration-redux==1.4
 django-toolbelt==0.0.1
 gunicorn==19.7.0
+numpy==1.12.0
 oauthlib==2.0.1
 olefile==0.44
+pandas==0.19.2
 Pillow==4.0.0
 psycopg2==2.7
 PyJWT==1.4.2
+python-dateutil==2.6.0
 python-openid==2.2.5
+pytz==2016.10
 requests==2.13.0
 requests-oauthlib==0.8.0
 six==1.10.0
