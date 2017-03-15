@@ -10,9 +10,16 @@
 {% block content %}
 {% if user.is_staff %}
 <div class="voting">
-    <a href="#" class="btn btn-default">Assign Voting</a>
+    <a href="{% url 'voting_create' %}" class="btn btn-default">Assign Voting</a>
 </div>
 {% endif %}
+<div>
+    {% for voting in user.voting_set.all %}
+        {% if not voting.is_voted %}
+        <p><a href="{% url 'voting' voting.voting_list.tournament.id %}">{{ voting }}</a></p>
+        {% endif %}
+    {% endfor %}
+</div>
 <table class="table table-striped">
 
     <tr>

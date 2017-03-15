@@ -14,15 +14,26 @@ from football_app.models import Tournament, Command, Round, Game,\
 from football_app.forms import ChampionshipGamesGenerateForm
 
 
-class VotingCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, CreateView):
+class VotingListCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, CreateView):
     template_name = "football_app/voting/voting_create.html"
     model = VotingList
     fields = ('tournament',)
 
     def get_success_url(self):
-        messages.info(self.request, "VotingList for tournament #{} was created".format(self.get_object().tournament.id))
+        messages.info(self.request, "VotingList was created")
         return reverse("cabinet")
 
-    def is_valid(self, form):
-        tournament = form.cleaned_data['tournament']
-        voting_list = VotingList.objects.create(tournament=tournament)
+    def get_initial(self):
+        initials = self.initial.copy()
+        print initials
+        return self.initial.copy()
+
+    def get_form(self, form_class=None):
+        kwargs = self.get_form_kwargs()
+        tournaments = Tournament.objects.filter(status=ENDED)
+        if form_class is None:
+            form_class = self.get_form_class()
+        form = form_class(**kwargs)
+        choices = [(t.id, t) for t in tournaments]
+        form.fields['tournament']._set_choices(choices)
+        return form

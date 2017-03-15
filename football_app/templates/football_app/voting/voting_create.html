@@ -1,0 +1,15 @@
+{% extends "football_app/base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Voting page{% endblock meta_title %}
+
+{% block title %}Voting create{% endblock title %}
+
+{% block content %}
+<form action="#" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create Voting" value="create_voting" />
+</form>
+{% endblock content %}
