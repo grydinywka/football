@@ -8,6 +8,11 @@
 {% block title %} User's profile: {% endblock title %}
 
 {% block content %}
+{% if user.is_staff %}
+<div class="voting">
+    <a href="#" class="btn btn-default">Assign Voting</a>
+</div>
+{% endif %}
 <table class="table table-striped">
 
     <tr>

@@ -29,11 +29,11 @@ class TournamentDetailView(DetailView):
 class TournamentCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, CreateView):
     template_name = 'football_app/tournament_create.html'
     model = Tournament
-    fields = ('title', 'users',)
+    fields = ('title', 'contestants',)
 
     def get_success_url(self):
         obj = self.object
-        return reverse('tournament_update', kwargs={'tid': obj.id})
+        return reverse('tournament_contestants_list', kwargs={'tid': obj.id})
 
 # class TournamentCreateView(FormView):
 #     template_name = 'football_app/tournament_create.html'

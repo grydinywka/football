@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from football_app.models import Tournament, Command
+from football_app.models import Tournament, Command, Voting, VotingList
 
 
 class CreateToutnamentForm(forms.Form):
@@ -113,3 +113,10 @@ class ChampionshipGamesGenerateForm(forms.Form):
         help_text="Type amount of games which every command will play with every other command of the tournament",
         error_messages={'required': "Field Amount is required"},
     )
+
+
+# class VotingCreateForm(forms.ModelForm):
+#     """doc str for VotingCreateForm"""
+#     class Meta:
+#         model = VotingList
+#         fields = ('tournament',)

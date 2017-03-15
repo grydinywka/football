@@ -4,6 +4,7 @@ Django==1.10.6
 django-registration-redux==1.4
 django-toolbelt==0.0.1
 gunicorn==19.7.0
+jsonfield==2.0.1
 numpy==1.12.0
 oauthlib==2.0.1
 olefile==0.44

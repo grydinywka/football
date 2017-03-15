@@ -1,4 +1,7 @@
 from __future__ import unicode_literals
+
+from jsonfield import JSONField
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -173,3 +176,37 @@ class Game(models.Model):
         elif self.status == CURRENT:
             score = "{} - {}(now is playing)".format(self.score1, self.score2)
         return "{} {} {}".format(self.command1, score, self.command2)
+
+
+class VotingList(models.Model):
+    tournament = models.OneToOneField(Tournament, blank=False, null=True,
+                                      default=None,
+                                      on_delete=models.SET_NULL)
+    is_open = models.BooleanField(blank=False, default=True)
+    list = JSONField(blank=True)
+
+    def __unicode__(self):
+        return "VotingList for tournament #{}".format(self.tournament.id)
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            d_cont = {}
+            for contestant in self.tournament.contestants.all():
+                d_cont[contestant.id.__str__()] = {'point': 0}
+            self.list = {'contestants' : d_cont}
+
+        super(VotingList, self).save(*args, **kwargs)
+
+class Voting(models.Model):
+    """model for voting by certain tournament"""
+    class Meta:
+        unique_together = ('contestant', 'voting_list',)
+
+    contestant = models.ForeignKey(User, blank=False, null=True, default=None)
+    is_voted = models.BooleanField(blank=False, default=False)
+    # final_place = models.PositiveSmallIntegerField(blank=True, null=True, default=None)
+    voting_list = models.ForeignKey(VotingList, blank=False, null=True, default=None)
+
+    def __unicode__(self):
+        return "Voting for contestant #{} and tournament #{}".format(self.contestant.id, self.voting_list.tournament.id)
+

@@ -42,4 +42,8 @@ urlpatterns = [
         name="game_score_update"),
     url(r'^(?P<tid>\d+)/playoff/game/(?P<gid>\d+)/delete/$', PlayoffGameDeleteView.as_view(),
         name="playoff_game_delete"),
+
+    # voting
+    url(r'^(?P<tid>\d+)/voting/$', TemplateView.as_view(template_name="football_app/voting/voting_by_sort.html"),
+        name="voting"),
 ]
