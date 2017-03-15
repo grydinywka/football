@@ -5,7 +5,7 @@
 {% block meta_title %} - Update Tournament's Users{% endblock meta_title %}
 
 {% block content %}
-<form action="{% url 'tournament_users_update' tournament.id %}" method="post" enctype="multipart/form-data">
+<form action="{% url 'tournament_contestants_update' tournament.id %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Update Tournament's Users" name="update_users"

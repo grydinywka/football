@@ -112,8 +112,8 @@ class FormCommandsView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, 
         return super(FormCommandsView, self).get(request,  *args, **kwargs)
 
 
-class TourUsersListView(DetailView):
-    template_name = 'football_app/tournament_users_list.html'
+class TourContestantsListView(DetailView):
+    template_name = 'football_app/tournament_contestants_list.html'
     model = Tournament
     pk_url_kwarg = 'tid'
 
@@ -124,8 +124,8 @@ class TourCommandsListView(DetailView):
     model = Tournament
 
 
-class TournamentUsersUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
-    template_name = 'football_app/tournament_users_update.html'
+class TournContestantsUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
+    template_name = 'football_app/tournament_contestants_update.html'
     pk_url_kwarg = 'tid'
     model = Tournament
     form_class = UpdateTourUsersForm
@@ -142,7 +142,7 @@ class TournamentUsersUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixi
 
     def get_success_url(self):
         obj = self.object
-        return reverse('tournament_users_list', kwargs={'tid': obj.id})
+        return reverse('tournament_contestants_list', kwargs={'tid': obj.id})
 
 
 # class TourCommandUpdateView(UpdateView):

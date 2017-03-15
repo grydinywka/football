@@ -25,7 +25,7 @@
 						<p class="lead text-center" id="tourn-list">
 							<a href="{% url 'home' %}">Tournaments</a>
 							{% if tournament %}
-							<a href="{% url 'tournament_users_list' tournament.id %}"> >> #{{ tournament.id }}</a>
+							<a href="{% url 'tournament_contestants_list' tournament.id %}"> >> #{{ tournament.id }}</a>
 							{% endif %}
 						</p>
 

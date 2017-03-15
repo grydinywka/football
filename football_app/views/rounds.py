@@ -227,7 +227,7 @@ class PlayoffGameCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
 
 
 class GameUpdateScore(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
-    template_name = 'football_app/playoff_game_score_update.html'
+    template_name = 'football_app/game_score_update.html'
     model = Game
     pk_url_kwarg = 'gid'
     tournament = None
