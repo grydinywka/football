@@ -180,7 +180,7 @@ class TourCommandCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
     # fields = ('contestant1', 'contestant2',)
     form_class = CreateTournCommandForm
 
-    def get_success_url(self, ):
+    def get_success_url(self):
         return reverse('tournament_commands_list', kwargs={"tid": self.kwargs['tid']})
 
     def get(self, request,  *args, **kwargs):
@@ -207,7 +207,8 @@ class TourCommandCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
             )
         messages.success(self.request, 'Command {} successful created!'.format(command))
 
-        return super(TourCommandCreateView, self).form_valid(form)
+        return HttpResponseRedirect(self.get_success_url())
+        # return super(TourCommandCreateView, self).form_valid(form)
 
     def get_free_contestant(self):
         tournament_commands = Command.objects.filter(tournament__pk=self.kwargs['tid'])
