@@ -13,11 +13,6 @@ class CreateToutnamentForm(forms.Form):
         widget=forms.SelectMultiple(attrs={'size': '5'})
 
     )
-    # amount_games = forms.IntegerField(
-    #     max_value=5,
-    #     min_value=1,
-    #     help_text="Number of games which every command should plays with every other one"
-    # )
 
 
 class UpdateTourUsersForm(forms.ModelForm):
@@ -92,8 +87,6 @@ class CreateTournCommandForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CreateTournCommandForm, self).__init__(*args, **kwargs)
-        # self.fields['contestant1'].initial = kwargs['initial']['init_contestant'][0]
-        # self.fields['contestant2'].initial = kwargs['initial']['init_contestant'][1]
         choices = [(contestant.id, contestant)
                    for contestant in kwargs['initial']['contestants']]
         self.fields['contestant1']._set_choices(choices)

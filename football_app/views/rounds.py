@@ -35,8 +35,6 @@ class ChampionshipGamesListView(LoginRequiredMixinCustom, ListView):
             games = Game.objects.filter(round=self.tournament.championship)
         else:
             games = None
-        # print self.tournament.championship
-        # print games
         return games
 
     def dispatch(self, request, *args, **kwargs):
@@ -85,7 +83,6 @@ class ChampionshipGamesGenerateView(LoginRequiredMixinCustom, PermissionRequired
         else:
             championship.games.all().delete()
         commands = self.tournament.command_set.all()
-        # print championship
         for i in xrange(0,commands.count()-1):
             j = i + 1
             while j < commands.count():
@@ -101,7 +98,6 @@ class ChampionshipGamesGenerateView(LoginRequiredMixinCustom, PermissionRequired
 
     def form_valid(self, form):
         amount = form.cleaned_data['amount']
-        # print amount
         self.generate_games(amount)
         return HttpResponseRedirect(self.get_success_url())
 
@@ -113,13 +109,9 @@ class ChampionshipTable(DetailView):
     context_object_name = "tournament"
 
     def get_data_table(self):
-        data_table = {}
         tournament = self.get_object()
 
         s = pd.Series([c for c in tournament.command_set.all()])
-        # for command in tournament.command_set.all():
-        #     dates = pd.date_range('20130101', periods=6)
-        #     df = pd.DataFrame(np.random.randn(6,4), index=dates, columns=list('ABCD'))
         df = pd.DataFrame({'command' : s})
         df['played games'] = pd.Series([c.get_played_games_chip_count() for c in df['command'].values])
         df['wins'] = pd.Series([c.get_wins_chip() for c in df['command'].values])
