@@ -96,13 +96,20 @@ class VotingClose(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
             for pk in points:
                 if max_point < points[pk]['point']:
                     max_point = points[pk]['point']
-            print max_point
+            # print max_point
             if max_point != 0:
                 norma = MAX_VALUE_RATE / max_point
                 for voting in votings:
                     contestant = voting.contestant
                     rateuser = contestant.rateuser
                     rateuser.rate = points[str(contestant.pk)]['point']*norma
+                    rateuser.save()
+
+                # for contestants which do not belong to the tournament
+                rest_contestants = User.objects.all().exclude(voting__in=votings)
+                for contestant in rest_contestants:
+                    rateuser = contestant.rateuser
+                    rateuser.rate /= 2
                     rateuser.save()
 
 

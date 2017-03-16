@@ -56,19 +56,22 @@ class Command(models.Model):
     """
         Command contains two contestants
     """
-
+    title = models.CharField(blank=True, max_length=255, null=True, default=None)
     tournament = models.ForeignKey("football_app.Tournament", blank=False, null=True, default=None)
     contestant1 = models.ForeignKey(User, blank=False, null=True, default=None, related_name='contestant1')
     contestant2 = models.ForeignKey(User, blank=False, null=True, default=None)
 
     def __unicode__(self):
-        name1 = self.contestant1.last_name or 'first_name'
-        name2 = self.contestant2.last_name or 'first_name'
-        if len(self.contestant1.first_name) != 0:
-            name1 += ' ' + self.contestant1.first_name[0] + '.'
-        if len(self.contestant2.first_name) != 0:
-            name2 += ' ' + self.contestant2.first_name[0] + '.'
-        return "{} + {}".format(name1, name2)
+        if self.title:
+            return self.title
+        else:
+            name1 = self.contestant1.last_name or 'first_name'
+            name2 = self.contestant2.last_name or 'first_name'
+            if len(self.contestant1.first_name) != 0:
+                name1 += ' ' + self.contestant1.first_name[0] + '.'
+            if len(self.contestant2.first_name) != 0:
+                name2 += ' ' + self.contestant2.first_name[0] + '.'
+            return "{} + {}".format(name1, name2)
 
     def is_contestant(self, contestant):
         if contestant == self.contestant1 or contestant == self.contestant2:

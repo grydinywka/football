@@ -1,0 +1,23 @@
+{% extends "football_app/tournament_base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - {{ which }} Commands List{% endblock meta_title %}
+
+{% block title %}
+{{ which }} Commands of {{ user.get_full_name }}
+{% endblock title %}
+
+{% block content %}
+<table class="table">
+    <tbody>
+    {% for command in commands %}
+        <tr>
+            <td>{{ command }}</td>
+            <td><a href="{% url 'command_title_update' command.tournament.id command.id %}">Update title</a> </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}

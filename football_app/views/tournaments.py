@@ -1,6 +1,7 @@
 from random import randint
 
 from django.shortcuts import render
+from django.db.models import Q
 from django.views.generic import TemplateView, ListView, DetailView,\
                                  UpdateView, CreateView, FormView,\
                                  RedirectView, DeleteView
@@ -9,20 +10,15 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from users_app.views import LoginRequiredMixinCustom, PermissionRequiredMixinCustom
-from football_app.models import Tournament, Command, Round, Game
-from football_app.forms import CreateToutnamentForm, UpdateTourUsersForm,\
+from football_app.models import Tournament, Command, Round, Game,\
+    IS_NOT_STARTED, CURRENT, ENDED
+from football_app.forms import CreateToutnamentForm, UpdateTourForm,\
                                CreateTournCommandForm
 
 
 class TournamentView(LoginRequiredMixinCustom, ListView):
     template_name='football_app/tournaments_list.html'
     context_object_name = 'tournaments'
-    model = Tournament
-
-
-class TournamentDetailView(DetailView):
-    pk_url_kwarg = 'tid'
-    template_name = 'football_app/tournament_detail.html'
     model = Tournament
 
 
@@ -112,12 +108,27 @@ class TourCommandsListView(DetailView):
     pk_url_kwarg = 'tid'
     model = Tournament
 
+    def get_context_data(self, **kwargs):
+        context = super(TourCommandsListView, self).get_context_data(**kwargs)
+        player = self.request.GET.get("player")
+        commands = self.get_object().command_set.all()
+        if player:
+            commands = commands.filter(
+                                 Q(contestant1__first_name__icontains=player) |
+                                 Q(contestant2__first_name__icontains=player) |
+                                 Q(contestant1__last_name__icontains=player) |
+                                 Q(contestant2__last_name__icontains=player)
+                                 )
+        context['commands'] = commands
+        return context
+    #     return super(TourCommandsListView, self).get_queryset()
 
-class TournContestantsUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
-    template_name = 'football_app/tournament_contestants_update.html'
+
+class TournamentUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
+    template_name = 'football_app/tournament_update.html'
     pk_url_kwarg = 'tid'
     model = Tournament
-    form_class = UpdateTourUsersForm
+    form_class = UpdateTourForm
 
     # fields = ('users',)
 
@@ -239,3 +250,88 @@ class TourCommandDeleteView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
         command = Command.objects.get(pk=self.kwargs['comid'])
         messages.success(self.request, 'Command {} successful deleted!'.format(command))
         return reverse('tournament_commands_list', kwargs={'tid': command.tournament.id})
+
+
+class PrevCommandsListView(LoginRequiredMixinCustom, ListView):
+    template_name='football_app/prev_curr_command.html'
+    context_object_name = 'commands'
+    model = Command
+
+    def get_commands(self):
+        commands = Command.objects.filter(
+            Q(contestant1__pk=self.kwargs['uid']) |
+            Q(contestant2__pk=self.kwargs['uid'])
+        )
+        return commands
+
+    def get_queryset(self):
+        commands = self.get_commands()
+        return commands.filter(tournament__status=ENDED)
+
+    def get_context_data(self, **kwargs):
+        context = super(PrevCommandsListView, self).get_context_data(**kwargs)
+        context['which'] = 'previous'
+
+        return context
+
+
+class CurrentCommandsListView(PrevCommandsListView):
+    def get_queryset(self):
+        commands = self.get_commands()
+        return commands.filter(tournament__status=CURRENT)
+
+    def get_context_data(self, **kwargs):
+        context = super(CurrentCommandsListView, self).get_context_data(**kwargs)
+        context['which'] = 'current'
+
+        return context
+
+
+class PrevTournamentsListView(LoginRequiredMixinCustom, ListView):
+    template_name='football_app/prev_curr_tournament.html'
+    context_object_name = 'tournaments'
+    model = Tournament
+
+    def get_tournaments(self):
+        tournaments = Tournament.objects.filter(contestants__pk=self.kwargs['uid'])
+        return tournaments
+
+    def get_queryset(self):
+        tournaments = self.get_tournaments()
+        return tournaments.filter(status=ENDED)
+
+    def get_context_data(self, **kwargs):
+        context = super(PrevTournamentsListView, self).get_context_data(**kwargs)
+        context['which'] = 'previous'
+
+        return context
+
+
+class CurrentTournamentsListView(PrevTournamentsListView):
+    def get_queryset(self):
+        tournaments = self.get_tournaments()
+        return tournaments.filter(status=CURRENT)
+
+    def get_context_data(self, **kwargs):
+        context = super(CurrentTournamentsListView, self).get_context_data(**kwargs)
+        context['which'] = 'current'
+
+        return context
+
+
+class CommandTitleUpdateView(LoginRequiredMixinCustom, UpdateView):
+    pk_url_kwarg = 'cid'
+    template_name = 'football_app/command_title_update.html'
+    model = Command
+    fields = ('title',)
+
+    def get_success_url(self):
+        messages.info(self.request, "Title od command #{} changed!".format(self.get_object().id))
+        return reverse('current_commands', kwargs={'uid': self.request.user.id})
+
+    def get(self, request, *args, **kwargs):
+        if request.user not in self.get_object().get_contestants:
+            messages.info(self.request, "You do not allow change command #{}!".format(self.get_object().id))
+            return HttpResponseRedirect(reverse('cabinet'))
+
+        return super(CommandTitleUpdateView, self).get(request, *args, **kwargs)

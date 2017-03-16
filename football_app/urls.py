@@ -1,10 +1,11 @@
 from django.conf.urls import url, include
 from django.views.generic import TemplateView
 
-from football_app.views.tournaments import TournamentView, TournamentDetailView,\
-    TournContestantsUpdateView, TournamentCreateView, FormCommandsView,\
+from football_app.views.tournaments import TournamentView, CommandTitleUpdateView,\
+    TournamentUpdateView, TournamentCreateView, FormCommandsView,\
     TourContestantsListView, TourCommandsListView, TourCommandUpdateView,\
-    TourCommandCreateView, TourCommandDeleteView
+    TourCommandCreateView, TourCommandDeleteView, PrevCommandsListView,\
+    CurrentCommandsListView, PrevTournamentsListView, CurrentTournamentsListView
 
 from football_app.views.rounds import ChampionshipGamesListView,\
     ChampionshipGamesGenerateView,PlayoffGamesListView,\
@@ -16,12 +17,13 @@ from football_app.views.voting import VotingListCreateView, VotingBySortView,\
 
 urlpatterns = [
     url(r'^list/$', TournamentView.as_view(), name='home'),
-    url(r'^(?P<tid>\d+)/detail/$', TournamentDetailView.as_view(), name="tournament_detail"),
+    url(r'^(?P<tid>\d+)/command_title/(?P<cid>\d+)/update$', CommandTitleUpdateView.as_view(),
+        name="command_title_update"),
     url(r'^create/$', TournamentCreateView.as_view(), name="tournament_create"),
     url(r'^form_command/$', FormCommandsView.as_view(), name="form_commands"),
     url(r'^(?P<tid>\d+)/contestants_list/$', TourContestantsListView.as_view(), name="tournament_contestants_list"),
-    url(r'^(?P<tid>\d+)/contestants_update/$', TournContestantsUpdateView.as_view(),
-        name="tournament_contestants_update"),
+    url(r'^(?P<tid>\d+)/update/$', TournamentUpdateView.as_view(),
+        name="tournament_update"),
     url(r'^(?P<tid>\d+)/commands_list/$', TourCommandsListView.as_view(), name="tournament_commands_list"),
     url(r'^(?P<tid>\d+)/command_create/$', TourCommandCreateView.as_view(),
         name="tournament_command_create"),
@@ -53,4 +55,14 @@ urlpatterns = [
         name="voting_create"),
     url(r'^voting/closing$', VotingClose.as_view(),
         name="voting_closing"),
+
+    url(r'^(?P<uid>\d+)/prev_commands$', PrevCommandsListView.as_view(),
+        name="prev_commands"),
+    url(r'^(?P<uid>\d+)/current_commands$', CurrentCommandsListView.as_view(),
+        name="current_commands"),
+    url(r'^(?P<uid>\d+)/prev_tournaments$', PrevTournamentsListView.as_view(),
+        name="prev_tournaments"),
+    url(r'^(?P<uid>\d+)/curr_tournaments$', CurrentTournamentsListView.as_view(),
+        name="curr_tournaments"),
+
 ]

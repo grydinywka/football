@@ -1,0 +1,14 @@
+{% extends "football_app/base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Update Tournament{% endblock meta_title %}
+
+{% block content %}
+<form action="{% url 'tournament_update' tournament.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Update Tournament" name="update_t"
+           class="btn btn-primary" />
+</form>
+{% endblock content %}

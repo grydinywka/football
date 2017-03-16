@@ -1,0 +1,22 @@
+{% extends "football_app/tournament_base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Previous Tournament List{% endblock meta_title %}
+
+{% block title %}
+{{ which }} Tournament of {{ user.get_full_name }}
+{% endblock title %}
+
+{% block content %}
+<table class="table">
+    <tbody>
+    {% for tournamant in tournaments %}
+        <tr>
+            <td>{{ tournamant }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}

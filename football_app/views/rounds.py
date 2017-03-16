@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 
 from django.shortcuts import render
+from django.db.models import Q
 from django.views.generic import TemplateView, ListView, DetailView,\
                                  UpdateView, CreateView, FormView,\
                                  RedirectView, DeleteView
@@ -30,9 +31,30 @@ class ChampionshipGamesListView(LoginRequiredMixinCustom, ListView):
 
         return context
 
+    def filtering(self, games):
+        player = self.request.GET.get("player")
+        command = self.request.GET.get("command")
+
+        if player:
+            games = games.filter(Q(command1__contestant1__first_name__icontains=player) |
+                                 Q(command1__contestant2__first_name__icontains=player) |
+                                 Q(command2__contestant1__first_name__icontains=player) |
+                                 Q(command2__contestant2__first_name__icontains=player) |
+                                 Q(command1__contestant1__last_name__icontains=player) |
+                                 Q(command1__contestant2__last_name__icontains=player) |
+                                 Q(command2__contestant1__last_name__icontains=player) |
+                                 Q(command2__contestant2__last_name__icontains=player)
+                                 )
+        if command:
+            games = games.filter(Q(command1__title=command) |
+                                 Q(command2__title=command)
+                                 )
+        return games
+
     def get_queryset(self):
         if self.tournament.championship:
             games = Game.objects.filter(round=self.tournament.championship)
+            games = self.filtering(games)
         else:
             games = None
         return games
@@ -45,6 +67,10 @@ class ChampionshipGamesListView(LoginRequiredMixinCustom, ListView):
             return HttpResponseRedirect(reverse('home'))
 
         return super(ChampionshipGamesListView, self).dispatch(request, *args, **kwargs)
+
+    # def get(self, request, *args, **kwargs):
+    #     if request
+    #     return HttpResponseRedirect(reverse('championship_games_list', kwargs={"tid": self.kwargs['tid']}))
 
 
 class ChampionshipGamesGenerateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
@@ -146,6 +172,7 @@ class PlayoffGamesListView(ChampionshipGamesListView):
         # games = Game.objects.filter(round=self.tournament.playoff)
         if self.tournament.playoff:
             games = Game.objects.filter(round=self.tournament.playoff)
+            games = self.filtering(games)
         else:
             games = None
         return games

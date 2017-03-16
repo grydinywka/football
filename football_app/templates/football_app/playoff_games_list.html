@@ -5,11 +5,20 @@
 {% block meta_title %} - Playoff - Games' list{% endblock meta_title %}
 
 {% block inner %}
+<div class="col-xs-6">
 {% if user.is_staff %}
     <a href="{% url 'playoff_game_create' tournament.id %}" class="btn btn-default">
         Create games
     </a>
 {% endif %}
+</div>
+<div class="col-xs-6">
+<form method="get">
+    <input type="search" name="player" placeholder="type contestant" value="{{ request.GET.player }}" />
+    <input type="search" name="command" placeholder="type command title" value="{{ request.GET.command }}" />
+    <input type="submit" value="Filter"/>
+</form>
+</div>
 <table class="table">
     <thead>
         <tr>

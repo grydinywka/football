@@ -6,7 +6,7 @@
 
 {% block inner %}
 {% if user.is_staff %}
-    <a href="{% url 'tournament_contestants_update' tournament.id %}" class="btn btn-default">Update contestents' list</a>
+    <a href="{% url 'tournament_update' tournament.id %}" class="btn btn-default">Update Tournament</a>
 {% endif %}
 <table class="table">
     <thead>

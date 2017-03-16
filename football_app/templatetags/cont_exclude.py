@@ -7,4 +7,7 @@ register = template.Library()
 def cont_exclude(queryset, contestant):
     return queryset.exclude(pk=contestant.pk)
 
+
+
+
 register.filter('cont_exclude', cont_exclude)

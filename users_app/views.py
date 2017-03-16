@@ -10,7 +10,7 @@ from django.views.generic.edit import FormView
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from users_app.models import AvatarProfile
-from users_app.forms import UserForm
+# from users_app.forms import UserForm
 from django.contrib.auth.models import Permission
 
 

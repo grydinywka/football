@@ -15,6 +15,13 @@
         Closing</a>
 </div>
 {% endif %}
+<div class="voting">
+<a href="{% url 'prev_commands' user.id %}" class="btn btn-default">List Of previous commands</a>
+<a href="{% url 'current_commands' user.id %}" class="btn btn-default">List Of current commands</a>
+<a href="{% url 'prev_tournaments' user.id %}" class="btn btn-default">List Of prev tournaments</a>
+<a href="{% url 'curr_tournaments' user.id %}" class="btn btn-default">List Of curr tournaments</a>
+
+</div>
 <div>
     {% for voting in user.voting_set.all %}
         {% if not voting.is_voted and voting.voting_list.is_open %}

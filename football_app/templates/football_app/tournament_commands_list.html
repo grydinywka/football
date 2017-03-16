@@ -7,7 +7,7 @@
 
 {% block inner %}
 
-
+<div class="col-xs-6">
 {% if user.is_staff %}
     <a href="{% url 'form_commands' %}?tournament={{ tournament.id }}" class="btn btn-default">
         Form commands auto
@@ -16,6 +16,13 @@
         Add a command manually
     </a>
 {% endif %}
+</div>
+<div class="col-xs-6">
+<form method="get">
+    <input type="search" name="player" placeholder="type contestant" value="{{ request.GET.player }}" />
+    <input type="submit" value="Filter"/>
+</form>
+</div>
 
 <table class="table">
     <thead>
@@ -24,7 +31,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for command in tournament.command_set.all %}
+        {% for command in commands %}
         <tr>
             <td><a href="{% url 'tournament_command_update' command.tournament.id command.id %}">
                 {{ command }}

@@ -15,16 +15,16 @@ class CreateToutnamentForm(forms.Form):
     )
 
 
-class UpdateTourUsersForm(forms.ModelForm):
+class UpdateTourForm(forms.ModelForm):
     """doc str for CreateToutnamentForm"""
 
     class Meta:
         model = Tournament
-        fields = ('contestants',)
+        fields = ('status', 'contestants',)
         exclude = ()
 
     def __init__(self, *args, **kwargs):
-        super(UpdateTourUsersForm, self).__init__(*args, **kwargs)
+        super(UpdateTourForm, self).__init__(*args, **kwargs)
         self.initial["contestants"] = kwargs['initial']['users_pk']
         # self.fields["users2"].queryset = User.objects.filter(id__in=[1,29])
 
