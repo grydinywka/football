@@ -115,8 +115,12 @@ class ChampionshipGamesGenerateForm(forms.Form):
     )
 
 
-# class VotingCreateForm(forms.ModelForm):
-#     """doc str for VotingCreateForm"""
-#     class Meta:
-#         model = VotingList
-#         fields = ('tournament',)
+class VotingCloseForm(forms.Form):
+    """doc str for VotingCloseForm"""
+    tournament = forms.ChoiceField(
+        label='tournament*',
+        help_text="Choose a Tournament",
+        error_messages={'required': "Field Tournament is required"},
+        choices = [(t.id, t) for t in Tournament.objects.filter(votinglist__is_open=True)],
+        widget=forms.Select(attrs={'size': '5'})
+    )

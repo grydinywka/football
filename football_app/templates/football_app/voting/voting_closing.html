@@ -1,0 +1,15 @@
+{% extends "football_app/base.html" %}
+
+{% load static from staticfiles %}
+
+{% block meta_title %} - Voting page - closing{% endblock meta_title %}
+
+{% block title %}Voting closing{% endblock title %}
+
+{% block content %}
+<form action="#" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Close Voting" value="close_voting" />
+</form>
+{% endblock content %}

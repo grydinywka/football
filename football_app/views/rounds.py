@@ -47,7 +47,8 @@ class ChampionshipGamesListView(LoginRequiredMixinCustom, ListView):
         return super(ChampionshipGamesListView, self).dispatch(request, *args, **kwargs)
 
 
-class ChampionshipGamesGenerateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, FormView):
+class ChampionshipGamesGenerateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
+                                    FormView):
     template_name = 'football_app/championship_games_generate.html'
     form_class = ChampionshipGamesGenerateForm
     tournament = None
@@ -102,7 +103,7 @@ class ChampionshipGamesGenerateView(LoginRequiredMixinCustom, PermissionRequired
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ChampionshipTable(DetailView):
+class ChampionshipTable(LoginRequiredMixinCustom, DetailView):
     pk_url_kwarg = 'tid'
     template_name = 'football_app/championship_table.html'
     model = Tournament
@@ -150,7 +151,8 @@ class PlayoffGamesListView(ChampionshipGamesListView):
         return games
 
 
-class PlayoffGameCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, CreateView):
+class PlayoffGameCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
+                            CreateView):
     template_name = "football_app/playoff_game_create.html"
     model = Game
     fields = ('command1', 'command2', 'kind',)

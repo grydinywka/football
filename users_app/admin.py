@@ -12,6 +12,10 @@ class AvatarProfileInline(admin.StackedInline):
 class UserAdmin(auth_admin.UserAdmin):
     inlines = (AvatarProfileInline,)
 
+class RateUserAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user_pk', 'rate']
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-admin.site.register(RateUser)
+admin.site.register(RateUser, RateUserAdmin)

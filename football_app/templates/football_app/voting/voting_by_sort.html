@@ -1,20 +1,25 @@
 {% extends "football_app/base.html" %}
 
 {% load static from staticfiles %}
+{% load cont_exclude %}
 
 {% block meta_title %} - Voting page{% endblock meta_title %}
 
-{% block title %}Voting for tournament{% endblock title %}
+{% block title %}Voting for {{ tournament }}{% endblock title %}
 
 {% block content %}
-<ul id = "sortable-1">
-    <li class = "default">Product 1</li>
-    <li class = "default">Product 2</li>
-    <li class = "default">Product 3</li>
-    <li class = "default">Product 4</li>
-    <li class = "default">Product 5</li>
-    <li class = "default">Product 6</li>
-    <li class = "default">Product 7</li>
-</ul>
+<div id="voting-list">
+    <ul id = "sortable-1">
+        {% for contestant in tournament.contestants.all|cont_exclude:user %}
+        <li class = "contestants-list" value="{{ contestant.pk }}">
+            {{ contestant.get_full_name|default:contestant.username }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    {% csrf_token %}
+    <button class="btn btn-primary" id="voting-btn" value="{{ tournament.id }}" type="button" name="voting-btn">Vote
+    </button>
+</div>
 {% endblock content %}
 

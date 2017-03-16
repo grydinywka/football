@@ -44,3 +44,7 @@ class RateUser(models.Model):
         place = rateusers.count() * PART_RATE / ALL_RATE
 
         return rateusers[place].rate
+
+    @property
+    def user_pk(self):
+        return self.user.pk

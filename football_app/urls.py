@@ -11,7 +11,8 @@ from football_app.views.rounds import ChampionshipGamesListView,\
     PlayoffGameCreateView, GameUpdateScore,\
     PlayoffGameDeleteView, ChampionshipTable
 
-from football_app.views.voting import VotingListCreateView
+from football_app.views.voting import VotingListCreateView, VotingBySortView,\
+    VotingClose
 
 urlpatterns = [
     url(r'^list/$', TournamentView.as_view(), name='home'),
@@ -46,9 +47,10 @@ urlpatterns = [
         name="playoff_game_delete"),
 
     # voting
-    url(r'^(?P<tid>\d+)/voting/$', TemplateView.as_view(template_name="football_app/voting/voting_by_sort.html"),
+    url(r'^(?P<tid>\d+)/voting/$', VotingBySortView.as_view(),
         name="voting"),
-    url(r'^voting/create$', VotingListCreateView.as_view(
-        template_name="football_app/voting/voting_create.html"),
+    url(r'^voting/create$', VotingListCreateView.as_view(),
         name="voting_create"),
+    url(r'^voting/closing$', VotingClose.as_view(),
+        name="voting_closing"),
 ]

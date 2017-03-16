@@ -11,11 +11,13 @@
 {% if user.is_staff %}
 <div class="voting">
     <a href="{% url 'voting_create' %}" class="btn btn-default">Assign Voting</a>
+    <a href="{% url 'voting_closing' %}" class="btn btn-default">Voting
+        Closing</a>
 </div>
 {% endif %}
 <div>
     {% for voting in user.voting_set.all %}
-        {% if not voting.is_voted %}
+        {% if not voting.is_voted and voting.voting_list.is_open %}
         <p><a href="{% url 'voting' voting.voting_list.tournament.id %}">{{ voting }}</a></p>
         {% endif %}
     {% endfor %}
