@@ -22,7 +22,8 @@ class TournamentView(LoginRequiredMixinCustom, ListView):
     model = Tournament
 
 
-class TournamentCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, CreateView):
+class TournamentCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
+                           CreateView):
     template_name = 'football_app/tournament_create.html'
     model = Tournament
     fields = ('title', 'contestants',)
@@ -46,7 +47,11 @@ class TournamentCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCust
 #         return HttpResponseRedirect(reverse('home'))
 
 
-class FormCommandsView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, RedirectView):
+class FormCommandsView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
+                       RedirectView):
+    """Automatically forms command - command must be pair
+       After that - redirect"""
+
     def form_commands(self, tournament, request, tourn_id):
         for command in tournament.command_set.all():
             command.delete()
@@ -98,12 +103,19 @@ class FormCommandsView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, 
 
 
 class TourContestantsListView(DetailView):
+    """
+        returns List of contestants of certain tournaments
+    """
     template_name = 'football_app/tournament_contestants_list.html'
     model = Tournament
     pk_url_kwarg = 'tid'
 
 
 class TourCommandsListView(DetailView):
+    """
+        returns List of commands of certain tournaments
+        If it is specified filter `player` we are filtering commands by contestants
+    """
     template_name = 'football_app/tournament_commands_list.html'
     pk_url_kwarg = 'tid'
     model = Tournament
@@ -121,10 +133,13 @@ class TourCommandsListView(DetailView):
                                  )
         context['commands'] = commands
         return context
-    #     return super(TourCommandsListView, self).get_queryset()
 
 
-class TournamentUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
+class TournamentUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
+                           UpdateView):
+    """
+        The View for update tournament: list of contestants ans status
+    """
     template_name = 'football_app/tournament_update.html'
     pk_url_kwarg = 'tid'
     model = Tournament
@@ -145,7 +160,11 @@ class TournamentUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCust
         return reverse('tournament_contestants_list', kwargs={'tid': obj.id})
 
 
-class TourCommandCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, CreateView):
+class TourCommandCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
+                            CreateView):
+    """
+        The view for manual creating commands for certain tournament
+    """
     template_name = 'football_app/tournament_command_create.html'
     pk_url_kwarg = 'tid'
     model = Command
@@ -190,14 +209,18 @@ class TourCommandCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
 
     def get_form(self, form_class=None):
         kwargs = self.get_form_kwargs()
-        contestatns = self.get_free_contestant()
-        kwargs['initial']['contestants'] = [c for c in contestatns]
+        contestants = self.get_free_contestant()
+        kwargs['initial']['contestants'] = [c for c in contestants]
         if form_class is None:
             form_class = self.get_form_class()
         return form_class(**kwargs)
 
 
-class TourCommandUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
+class TourCommandUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
+                            UpdateView):
+    """
+        The view for updating specified command - its contestants
+    """
     template_name = 'football_app/tournament_command_update.html'
     pk_url_kwarg = 'comid'
     model = Command
@@ -219,11 +242,11 @@ class TourCommandUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
 
     def get_form(self, form_class=None):
         kwargs = self.get_form_kwargs()
-        contestatns = self.get_free_contestant()
+        contestants = self.get_free_contestant()
         if form_class is None:
             form_class = self.get_form_class()
         form = form_class(**kwargs)
-        choices = [(c.id, c) for c in contestatns]
+        choices = [(c.id, c) for c in contestants]
         choices.extend([(c.id, c) for c in self.get_object().get_contestants])
         form.fields['contestant1']._set_choices(choices)
         form.fields['contestant2']._set_choices(choices)
@@ -241,7 +264,11 @@ class TourCommandUpdateView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
         return super(TourCommandUpdateView, self).post(request, *args, **kwargs)
 
 
-class TourCommandDeleteView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, DeleteView):
+class TourCommandDeleteView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
+                            DeleteView):
+    """
+        The view for destroying command
+    """
     template_name = 'football_app/tournament_command_delete.html'
     model = Command
     pk_url_kwarg = 'comid'
@@ -253,6 +280,10 @@ class TourCommandDeleteView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
 
 
 class PrevCommandsListView(LoginRequiredMixinCustom, ListView):
+    """
+        The view for getting list of previous commands of the contestant. Tournament status is ENDED
+    """
+
     template_name='football_app/prev_curr_command.html'
     context_object_name = 'commands'
     model = Command
@@ -276,6 +307,9 @@ class PrevCommandsListView(LoginRequiredMixinCustom, ListView):
 
 
 class CurrentCommandsListView(PrevCommandsListView):
+    """
+        The view for getting list of current commands of the contestant. Tournament status is CURRENT
+    """
     def get_queryset(self):
         commands = self.get_commands()
         return commands.filter(tournament__status=CURRENT)
@@ -288,6 +322,9 @@ class CurrentCommandsListView(PrevCommandsListView):
 
 
 class PrevTournamentsListView(LoginRequiredMixinCustom, ListView):
+    """
+        The view for getting list of previous tournaments of the contestant. Tournament status is ENDED
+    """
     template_name='football_app/prev_curr_tournament.html'
     context_object_name = 'tournaments'
     model = Tournament
@@ -308,6 +345,9 @@ class PrevTournamentsListView(LoginRequiredMixinCustom, ListView):
 
 
 class CurrentTournamentsListView(PrevTournamentsListView):
+    """
+        The view for getting list of current tournaments of the contestant. Tournament status is CURRENT
+    """
     def get_queryset(self):
         tournaments = self.get_tournaments()
         return tournaments.filter(status=CURRENT)
@@ -320,6 +360,9 @@ class CurrentTournamentsListView(PrevTournamentsListView):
 
 
 class CommandTitleUpdateView(LoginRequiredMixinCustom, UpdateView):
+    """
+        The view for updating title(name) of current command of contestant
+    """
     pk_url_kwarg = 'cid'
     template_name = 'football_app/command_title_update.html'
     model = Command
@@ -330,8 +373,12 @@ class CommandTitleUpdateView(LoginRequiredMixinCustom, UpdateView):
         return reverse('current_commands', kwargs={'uid': self.request.user.id})
 
     def get(self, request, *args, **kwargs):
-        if request.user not in self.get_object().get_contestants:
+        command = self.get_object()
+        if request.user not in command.get_contestants:
             messages.info(self.request, "You do not allow change command #{}!".format(self.get_object().id))
+            return HttpResponseRedirect(reverse('cabinet'))
+        if command.tournament.status != CURRENT:
+            messages.info(self.request, "You  allow change command only for current commands!")
             return HttpResponseRedirect(reverse('cabinet'))
 
         return super(CommandTitleUpdateView, self).get(request, *args, **kwargs)

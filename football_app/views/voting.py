@@ -15,7 +15,12 @@ from users_app.models import MAX_VALUE_RATE
 from football_app.forms import ChampionshipGamesGenerateForm, VotingCloseForm
 
 
-class VotingListCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, CreateView):
+class VotingListCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
+                           CreateView):
+
+    """
+        The view for creating voting of a tournament with status ENDED
+    """
     template_name = "football_app/voting/voting_create.html"
     model = VotingList
     fields = ('tournament',)
@@ -23,11 +28,6 @@ class VotingListCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCust
     def get_success_url(self):
         messages.info(self.request, "VotingList was created")
         return reverse("cabinet")
-
-    def get_initial(self):
-        initials = self.initial.copy()
-        print initials
-        return self.initial.copy()
 
     def get_form(self, form_class=None):
         kwargs = self.get_form_kwargs()
@@ -41,6 +41,9 @@ class VotingListCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCust
 
 
 class VotingBySortView(LoginRequiredMixinCustom, DetailView):
+    """
+        The view for voting - contestant vote for other contestants by sorting list
+    """
     template_name="football_app/voting/voting_by_sort.html"
     pk_url_kwarg = 'tid'
     model = Tournament
@@ -81,6 +84,9 @@ class VotingBySortView(LoginRequiredMixinCustom, DetailView):
 
 class VotingClose(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
                   FormView):
+    """
+        The view for closing voting. After closing it will calculate rates of all contestants
+    """
     template_name = "football_app/voting/voting_closing.html"
     form_class = VotingCloseForm
 

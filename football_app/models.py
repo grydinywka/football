@@ -51,6 +51,10 @@ class Tournament(models.Model):
     def __unicode__(self):
         return "{} - Tournament #{}".format(self.title ,self.pk)
 
+    @property
+    def get_status(self):
+        return self.statuses[self.status-1][1]
+
 
 class Command(models.Model):
     """

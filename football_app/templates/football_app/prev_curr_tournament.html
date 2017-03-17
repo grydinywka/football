@@ -2,7 +2,7 @@
 
 {% load static from staticfiles %}
 
-{% block meta_title %} - Previous Tournament List{% endblock meta_title %}
+{% block meta_title %} - {{ which }} Tournament List{% endblock meta_title %}
 
 {% block title %}
 {{ which }} Tournament of {{ user.get_full_name }}

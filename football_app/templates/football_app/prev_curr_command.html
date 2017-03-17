@@ -14,7 +14,9 @@
     {% for command in commands %}
         <tr>
             <td>{{ command }}</td>
+            {% if command.tournament.status == 2 %}
             <td><a href="{% url 'command_title_update' command.tournament.id command.id %}">Update title</a> </td>
+            {% endif %}
         </tr>
     {% endfor %}
     </tbody>

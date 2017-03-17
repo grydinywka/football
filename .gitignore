@@ -6,3 +6,4 @@
 *.sqlite
 media
 development_settings.py
+staticfiles

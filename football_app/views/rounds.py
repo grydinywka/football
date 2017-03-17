@@ -20,6 +20,9 @@ from football_app.forms import ChampionshipGamesGenerateForm
 
 
 class ChampionshipGamesListView(LoginRequiredMixinCustom, ListView):
+    """
+        The view for getting list of championship's games
+    """
     template_name = "football_app/championship_games_list.html"
     model = Game
     context_object_name = 'games'
@@ -75,6 +78,10 @@ class ChampionshipGamesListView(LoginRequiredMixinCustom, ListView):
 
 class ChampionshipGamesGenerateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
                                     FormView):
+    """
+        The view for auto generating games of championship. It requires amount of game value
+    """
+
     template_name = 'football_app/championship_games_generate.html'
     form_class = ChampionshipGamesGenerateForm
     tournament = None
@@ -130,6 +137,10 @@ class ChampionshipGamesGenerateView(LoginRequiredMixinCustom, PermissionRequired
 
 
 class ChampionshipTable(LoginRequiredMixinCustom, DetailView):
+    """
+        The view for gettinf championship table. Is Used pandas lib
+    """
+
     pk_url_kwarg = 'tid'
     template_name = 'football_app/championship_table.html'
     model = Tournament
@@ -166,6 +177,9 @@ class ChampionshipTable(LoginRequiredMixinCustom, DetailView):
 
 
 class PlayoffGamesListView(ChampionshipGamesListView):
+    """
+        The view for getting play-off's list of games
+    """
     template_name = "football_app/playoff_games_list.html"
 
     def get_queryset(self):
@@ -180,6 +194,9 @@ class PlayoffGamesListView(ChampionshipGamesListView):
 
 class PlayoffGameCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
                             CreateView):
+    """
+        The view for manual creating games of play-off
+    """
     template_name = "football_app/playoff_game_create.html"
     model = Game
     fields = ('command1', 'command2', 'kind',)
@@ -247,7 +264,11 @@ class PlayoffGameCreateView(LoginRequiredMixinCustom, PermissionRequiredMixinCus
         return HttpResponseRedirect(self.get_success_url())
 
 
-class GameUpdateScore(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, UpdateView):
+class GameUpdateScore(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
+                      UpdateView):
+    """
+        The view for update score of certain game
+    """
     template_name = 'football_app/game_score_update.html'
     model = Game
     pk_url_kwarg = 'gid'
@@ -276,7 +297,11 @@ class GameUpdateScore(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, U
         return super(GameUpdateScore, self).dispatch(request, *args, **kwargs)
 
 
-class PlayoffGameDeleteView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom, DeleteView):
+class PlayoffGameDeleteView(LoginRequiredMixinCustom, PermissionRequiredMixinCustom,
+                            DeleteView):
+    """
+        The view for destroying game
+    """
     template_name = 'football_app/playoff_game_delete.html'
     model = Game
     pk_url_kwarg = 'gid'
